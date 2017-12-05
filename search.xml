@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+    
+    <entry>
+      <title><![CDATA[以太网OAM机制概述]]></title>
+      <url>/2017/12/03/oam-overview/</url>
+      <content type="html"><![CDATA[<p><strong>摘要</strong>：OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网OAM进行了详细定义。本文对以太网的OAM机制进行详细描述。</p>
+<a id="more"></a>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h1><p>OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网的OAM进行了详细定义。OAM子层是IEEE802.3的可选子层，位于LLC层（或MAC Client）和MAC层（或MAC Control子层）之间，主要功能有：</p>
+<ul>
+<li>远端故障指示：当本地接收链路出现故障时，可以指示对端设备；</li>
+<li>远端环回：可提供在数据链路层上的帧环回功能，以便测试链路性能以及定位故障位置；</li>
+<li>链路监视：可指示对端多种的链路事件、可查询各种MIB变量。</li>
+</ul>
+<h1 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a><strong>控制流程</strong></h1><p>OAM子层与上下层之间的服务接口如下图所示。</p>
+<p><img src="/2017/12/03/oam-overview/oam_service_interface.jpg" alt="OAM子层的服务接口"></p>
+<p>OAM Client在OAM机制中起到关键的功能，但其不在IEEE802.3-2005 Clause57的定义范围之内。其作用有：</p>
+<ul>
+<li>使能和配置OAM子层实体；</li>
+<li>在OAM发现过程（OAM Discovery Process）中负责监视收到的OAMPDU，并根据本地和对端的状态和配置决定是否允许在对端之间建立OAM连接；</li>
+<li>在OAM建立之后，负责生成OAMPDU Response或者过滤非法的OAMPDU；</li>
+<li>负责管理远端回环的开启与关闭；</li>
+<li>负责发送和接收关于各种链路事件(Link Events)的特殊PAMPDU。</li>
+</ul>
+<p>OAM子层对上层MAC Client提供标准的IEEE802.3 MAC服务接口(<code>MA_DATA.request</code>以及<code>MA_DATA.indication</code>)；OAM子层对OAM Client提供两组服务接口，控制信息的交互采用<code>OAM_CTL.request</code>和<code>OAM_CTL.indication</code>，数据信息的交互采用<code>OAMPDU.request</code>和<code>OAMPDU.request</code>。在OAM子层内，所有的发送帧(*.request)均最终通过复用器(Multiplexer)复用并调用底层的标准IEEE802.3 MAC服务接口<code>MA_DATA.request</code>进行发送；OAM子层通过底层的服务接口<code>MA_DATA.indication</code>获取接收帧，并通过解析器(Parser)解析分路到MAC_Client、OAM_Client或直接环回置Multiplexer，如下图（OAM子层的内部模块关系图）所示。</p>
+<p><img src="/2017/12/03/oam-overview/oam_block_diagram.jpg" alt="OAM子层的内部模块关系图"></p>
+<p>上图中，Control为OAM子层中的控制模块，该模块除了负责提供OAM Client与OAM子层间的服务接口，还负责以下功能：</p>
+<ul>
+<li>根据OAM Client的控制信息，负责OAM<strong>发现过程</strong>；</li>
+<li>负责OAMPDU（OAM协议数据单元，可以理解为OAM帧）的<strong>传输过程</strong>；</li>
+<li>负责OAMPDU的<strong>接收规则</strong>。</li>
+</ul>
+<p>这三个过程组成了OAM机制的核心工作流程，下文将详细介绍。</p>
+<h2 id="OAM发现过程"><a href="#OAM发现过程" class="headerlink" title="OAM发现过程"></a><strong>OAM发现过程</strong></h2><p>OAM发现过程用于判断对端设备是否具有OAM功能以及其OAM的配置是否相匹配，是双方设备进行OAM交互的第一个步骤。OAM发现过程如下图所示：</p>
+<p><img src="/2017/12/03/oam-overview/oam_discovery.jpg" alt="OAM发现过程状态转移图"></p>
+<ul>
+<li><p>若当前未处于发现过程，检查以下触发条件是否满足：</p>
+<ul>
+<li>OAM子层的复位信号(<code>BEGIN</code>)置为<code>TURE</code></li>
+<li>定时器(<code>local_lost_link_timer</code>)已超时(在一定时间内没有任何OAMPDU)</li>
+<li>底层上报本地接收链路存在故障(<code>local_link_status = FAIL</code>)</li>
+</ul>
+</li>
+<li><p>若满足上述任何一个触发条件，OAM子层则进入发现过程的<code>FAULT state</code>。在该状态，停止定时器<code>local_lost_link_timer</code>；将<code>local_stable</code>置为<code>FASLE</code>（意为本地设备没有接收到或不认可远端设备的OAM状态信息）；若<code>local_link_stautus = FAIL</code>，则将<code>local_pdu</code>置为<code>LF_INFO</code>，否则将<code>local_pdu</code>置为<code>RX_INFO</code>。</p>
+<p><code>local_pdu</code>管理着发现过程中哪种OAMPDU可以被发送或接收：</p>
+<ul>
+<li><code>LF_INFO</code>：仅有Information OAMPDU可以被发送且该Information OAMPDU的Link Fault critical link event被标记，同时不允许该OAMPDU携带任何Information TLV； 仅允许接收Information OAMPDU</li>
+<li><code>RX_INFO</code>: 不允许发送任何OAMPDU；仅允许接收Information OAMPDU</li>
+<li><code>INFO</code>: 仅允许发送和接收Information OAMPDU</li>
+<li><code>ANY</code>：可以发送和接收任何OAMPDU</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>当<code>local_link_status = OK</code>时(底层接收链路恢复正常)，设备检查自己的OAM模式(<code>local_oam_mode</code>)：</p>
+<ul>
+<li>若设备为主动模式(<code>local_oam_mode = ACTIVE</code>)，则进入<code>ACTIVE_SEND_LOCAL</code>状态，将<code>local_pdu</code>置为INFO，并开始发送仅包含Local Information TLV的Information OAMPDU；</li>
+<li>若设备为主动模式(<code>local_oam_mode = PASSIVE</code>)，则进入<code>PASSIVE_WAIT_LOCAL</code>状态，将<code>local_pdu</code>置为<code>RX_INFO</code>即等待接收含有Local Information TLV的Information OAMPDU；</li>
+</ul>
+</li>
+<li><p>当设备接收到Information OAMPDU并其中含有Local Information TLV，则设备进入<code>SEND_LOCAL_REMOTE</code>状态。在该状态中，<code>local_stable</code>置为<code>FASLE</code>；并将<code>local_pdu</code>置为<code>INFO</code>，开始发送同时包含Local Information TLV和Remote Information TLV的Information OAMPDU。</p>
+<p>当任意时刻本地设备或对端设备发生变化导致本地的OAM Client不认可对端设备的参数设置(<code>local_satisfied = FALSE</code>)，则本地设备会重新进入到<code>SEND_LOCAL_REMOTE</code>状态。</p>
+</li>
+<li><p>当本地和远端的OAM参数设置相匹配时(<code>local_satisfied = TRUE</code>)，则设备进入<code>SEND_LOCAL_REMOTE_OK</code>状态。在该状态中，<code>local_stable</code>置为<code>TRUE</code>，<code>local_pdu</code>置为<code>INFO</code>。</p>
+<p>当任意时刻本地设备发生变化导致对端的OAM Client不认可本地设备的参数设置时(<code>remote_stable = FALSE</code>)，则会本地设备重新进入到<code>SEND_LOCAL_REMOTE_OK</code>状态。</p>
+</li>
+<li><p>当本地设备接收到远端认可本地参数设备时，本地设备进入<code>SEND_ANY</code>状态。该状态是OAM链路通信中的期望状态。</p>
+</li>
+</ul>
+<p>OAM发现过程中，两端的设备使用OAMPDU的<code>Flag</code>字段中的<code>Remote Stable</code>、<code>Remote Evaluating</code>、<code>Local Stable</code>以及<code>Local Evaluationg</code>交互两端的发现状态。其中：</p>
+<ul>
+<li><code>Remote Stable</code>和<code>Remote Evaluating</code>为上一次接收到的OAMPDU中的<code>Local Stable</code>和<code>Local Evaluating</code>的拷贝；</li>
+<li><code>Local Stable</code>和<code>Local Evaluating</code>编码的含义为：<ul>
+<li>01： 发现过程进行中，尚未结束；</li>
+<li>00： 发现过程无法完成，本端设备不认可对端设备的设置；</li>
+<li>10： 发现过程完成，本端设备认可对端设备的设置</li>
+<li>11`： 保留</li>
+</ul>
+</li>
+</ul>
+<h2 id="传输过程"><a href="#传输过程" class="headerlink" title="传输过程"></a><strong>传输过程</strong></h2><p>传输过程是指OAM子层发送任意OAMPDU的控制过程。具体流程如下图所示：</p>
+<p><img src="/2017/12/03/oam-overview/oam_transmit_proccess.jpg" alt="OAM发送过程状态转移图"></p>
+<ul>
+<li>OAM子层复位信号(<code>BEGIN</code>）置为<code>TRUE</code>后，OAM子层进入<code>RESET</code>状态。在该状态，将开启一个1秒钟的定时器(<code>pdu_timer</code>)以及将最大可以发送的OAMPDU数目重置为10(<code>pdu_cnt = 10</code>)</li>
+</ul>
+<ul>
+<li><p><code>Reset</code>状态结束后，将进入<code>WAIT_FOR_TX</code>状态。在该状态中等待三种事件的发生，并进行不同的状态跳转：</p>
+<ul>
+<li>pdu_timer超时。若pdu_timer超时且之前有OAMPDU发出(pdu_cnt&lt;10)，则回到<code>RESET</code>状态；若超时前没有任何OAMPDU发出，则进入<code>TX_OAMPDU</code>状态，发送一个Information OAMPDU，以免重新进入发现过程；</li>
+<li><code>pdu_timer</code>未超时，收了发送有效的发送请求信号(<code>valid_pdu_req</code>)，则进入<code>DEC_PDU_CNT</code>状态；<code>valid_pdu_req</code>有效的条件有两个：1)若当<code>local_pdu</code>为<code>INFO</code>或<code>ANY</code>时OAM Client发出一个<code>OAMPDU.request</code>且<code>pdu_cnt</code>不为0；2) OAM Client发出一个<code>OAM_CTRL.request</code>且<code>local_pdu</code>为<code>ANY</code>(发现过程已完成)。</li>
+</ul>
+</li>
+<li><p>在<code>DEC_PDU_CNT</code>状态中，若请求发送的OAMPDU不携带紧急链路事件的标记位(<code>pdu_req = NORMAL</code>)则对<code>local_pdu</code>进行减一；</p>
+</li>
+<li><p>在<code>TX_OAMPDU</code>状态中，生成<code>CTL:OAMI.request</code>（然后将由复用器Multiplexer调用进行底层服务进行发送）；而后，若<code>pdu_timer</code>超时则跳转到<code>RESET</code>状态，反之，跳转到<code>WAIT_FOR_TX</code>状态。</p>
+</li>
+</ul>
+<h2 id="接收规则"><a href="#接收规则" class="headerlink" title="接收规则"></a><strong>接收规则</strong></h2><p>在OAM子层的接收链路中，解析器Parser通过CTL:OAMI.indication通知Control接收到一个OAMPDU，Control根据以下的接收规则确定是否向OAM Client产生OAMPDU.indication：</p>
+<ul>
+<li>当local_pdu不为ANY时，仅有Information OAMPDU会上报，其余的OAMPDU将被丢弃；</li>
+<li>当local_pdu为ANY时，所有的OAMPDU均会被上报，包括一些未知Code Field域的OAMPDU。</li>
+</ul>
+<h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a><strong>主要功能</strong></h1><p>如上所述，OAM的主要功能包括：远端故障指示、远端环回以及链路监视。以下我们将简要论述。</p>
+<blockquote>
+<p>参考<br>[<a href="http://www.h3c.com.cn/MiniSite/Technology_Circle/Net_Reptile/The_One/Home/Catalog/200911/655240_97665_0.htm" target="_blank" rel="noopener">http://www.h3c.com.cn/MiniSite/Technology_Circle/Net_Reptile/The_One/Home/Catalog/200911/655240_97665_0.htm</a>]</p>
+</blockquote>
+<h2 id="远端故障指示"><a href="#远端故障指示" class="headerlink" title="远端故障指示"></a><strong>远端故障指示</strong></h2><p>远端故障指示是告知对端发生了严重的错误，会导致链路不可用。远端故障指示采用OAM协议报文中Flags域中的3个比特位通知对端。当发生这些事件时，会立即产生一个比特位置位Information报文，在之后发送的其他报文中，该比特位也会置位，直到故障解除。</p>
+<ul>
+<li>链路故障(Link Fault)：对端链路信号丢失，在光口上，收端收不到信号时，在发端发送。在电口上，一般不会产生这个事件，因为在电口上，采用RJ-45接头的收发端在一根电缆中，仅有收端出现故障而发端无故障的概率几乎没有。</li>
+<li>临终遗言(Dying Gasp)：不可预知的状态发生，比如电源中断，则利用电池或电容中的电量发出报文。</li>
+<li>紧急事件(Critical Event)：不能确定的紧急事件发生。</li>
+</ul>
+<h2 id="链路监视"><a href="#链路监视" class="headerlink" title="链路监视"></a><strong>链路监视</strong></h2><p>链路监视用于发现错误和低效的连接。802.3 OAM定义了四种一般链路事件来描述链路的质量。如果端口上所收到的报文的错误统计在给定的周期内达到了预设的值，OAM就报错，同时，发送一般链路事件报文给对端，告诉对端：你发出的报文错误很多。这种OAM报文的Code为01。</p>
+<ul>
+<li>错误信号周期(Errored Symbol Period) ：就是误码率，目前不支持误码率的检测。</li>
+<li>错误帧(Errored Frame)：在指定时间内的错误帧数超过阈值，会产生本事件。</li>
+<li>错误帧周期(Errored Frame Period)：在指定的连续帧数内的错误帧数超过阈值，会产生本事件。</li>
+<li>错误帧秒数(Errored Frame Seconds Summary)：若在一秒内有错误帧出现，则计数为一个错误帧秒数；在指定的时间内的错误帧秒数超过阈值，会产生本事件。</li>
+</ul>
+<p>应用中可以根据具体的要求选用一种或几种事件，设置阈值和周期，对链路进行监控。</p>
+<h2 id="远端环回"><a href="#远端环回" class="headerlink" title="远端环回"></a><strong>远端环回</strong></h2><p>由于处于物理层，802.3的环回同其他OAM类协议的环回有所不同。802.3的环回是一种物理状态，而不是报文处理流程。</p>
+<p>远端环回分为主动端和被动端。主动端发起环回，向被动端发送一个回环报文，被动端收到环回报文后，将本端设置为环回状态。在这种状态下，被动端收到的所有非OAM报文均被原封不动地返回且不再发送除OAM报文之外的其他报文。这时，主动端将收到的所有非OAM报文丢弃。这种状态是一种测试状态，显然，其他协议将不能正常工作，对于上层协议来说，该链路实际上处于Down状态。</p>
+<p>OAM的环回功能使得主动端能够单独对双向物理链路进行检测，这时，它可以发送测试报文，对链路进行探测，确定链路的通断、性能等。主动端最后发送解除环回的报文，使被动端恢复正常。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 协议分析 </tag>
+            
+            <tag> 以太网 </tag>
+            
+            <tag> MAC层 </tag>
+            
+            <tag> 网络管理 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[HINOC2.0标准介绍(4):物理层帧结构与传输效率]]></title>
+      <url>/2017/12/03/hinoc2-0-intro-4/</url>
+      <content type="html"><![CDATA[<p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
+<p><strong>摘要</strong>: 本文简要介绍了HINOC2.0物理层帧结构以及其设计过程，并给出了HINOC2.0 MAC层传输速率和效率的理论计算。</p>
+<a id="more"></a>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HINOC2.0物理层分为6种帧，下行帧包括：下行探测帧（Pd帧）、下行数据帧（Dd帧）、下行控制帧（Cd帧）；上行帧包括：上行探测帧（Pu帧）、上行数据帧（Du帧）和上行报告帧（Ru帧）。上下行探测帧用于承载MAC层信令帧，上下行数据帧用于承载MAC层数据帧，下行控制帧用于承载MAC层媒体接入规划（MAP）帧，上行报告帧用于承载MAC层报告（R）帧。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-4/phy-frame.jpg" alt="物理层帧结构"></p>
+<p>6种帧的时域构成如上图所示，包括前导序列和OFDM负载段两部分。各种帧的详细配置如下表所示。前导序列的长度仅为4us，仅存在于Pd帧与Pu帧，用于接收机进行帧同步以及频率同步；负载段包括整数个OFDM符号，用于MAC层信令或数据的传输。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">帧类型</th>
+<th style="text-align:center">前导序列</th>
+<th style="text-align:center">负载段</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Pd帧</td>
+<td style="text-align:center">前导序列A</td>
+<td style="text-align:center">负载段A</td>
+</tr>
+<tr>
+<td style="text-align:center">Dd帧</td>
+<td style="text-align:center">无</td>
+<td style="text-align:center">负载段B</td>
+</tr>
+<tr>
+<td style="text-align:center">Cd帧</td>
+<td style="text-align:center">无</td>
+<td style="text-align:center">负载段C</td>
+</tr>
+<tr>
+<td style="text-align:center">Pu帧</td>
+<td style="text-align:center">前导序列B</td>
+<td style="text-align:center">负载段A</td>
+</tr>
+<tr>
+<td style="text-align:center">Du帧</td>
+<td style="text-align:center">无</td>
+<td style="text-align:center">负载段B</td>
+</tr>
+<tr>
+<td style="text-align:center">Ru帧</td>
+<td style="text-align:center">无</td>
+<td style="text-align:center">负载段D</td>
+</tr>
+</tbody>
+</table>
+<h1 id="时序关系"><a href="#时序关系" class="headerlink" title="时序关系"></a>时序关系</h1><p>下图是HINOC2.0物理层6种帧的时序关系图。该图是理解HINOC物理层行为和传输效率的关键。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-4/phy-frame-timing.jpg" alt="HINOC2.0物理帧时序关系"></p>
+<ul>
+<li><p>Pd周期</p>
+<p>在HINOC系统中，Pd帧周期性发送，相邻两个Pd帧的起始时间间隔为65536us，称为Pd周期。</p>
+</li>
+<li><p>MAP周期</p>
+<p>在Pd周期内，除去Pd帧和Pu帧之外的信道资源在时间上被划分若干个MAP周期。MAP周期为HINOC最小调度周期。MAP周期的时间长度和个数取决于OFDM循环前缀参数配置。</p>
+<p>当OFDM循环前缀为典型值1us时，MAP周期的长度为2482us；每个MAP周期包括连续的146个OFDM符号，即146个时隙；每个Pd周期内包括26个MAP周期。</p>
+</li>
+<li><p>Pd帧/Pu帧</p>
+<p>下行探测帧（Pd帧）是HINOC网络的心跳帧。Pd帧包括4us的前导序列以及2个OFDM符号，总长为38us，占整个长65536us的Pd周期的万分之6，开销极其之小。</p>
+<p>上行探测帧（Pu帧）位于每个Pd周期中间的Pu帧组内。Pu帧组时隙由9个连续放置的Pu帧时隙及其帧间隔构成。其中第5个Pu帧时隙起始时刻位于Pd周期的中心时刻，与相邻Pd帧的起始时刻间隔为32768us。HINOC1.0系统是不存在Pu帧组的概念的，即1.0系统中每个Pd帧仅包括1个Pu帧的预留位置。2.0系统中设计Pu帧组的目的在于提高用户接入和链路的速度。</p>
+<p>38us长Pd帧/Pu帧是“以一敌十的多面手”，可以用来完成非常多的功能：</p>
+<ul>
+<li>新用户接纳</li>
+<li>老用户链路维护</li>
+<li>测距</li>
+<li>物理层载波频率同步</li>
+<li>物理层采样时钟频率同步</li>
+<li>物理层功率控制</li>
+<li>物理层信道估计</li>
+</ul>
+<p>在其他有线或无线系统中，以上每个功能恐怕都需要专门的物理层帧或训练字段来辅助完成。</p>
+</li>
+<li><p>Cd帧</p>
+<p>下行控制帧（Cd帧）仅包括3个OFDM符号，在MAP周期内的位置固定，位于MAP周期的第5~7个OFDM符号。Cd帧的作用有三个：承载MAC层的信道规划信息；承载上一MAP周期内的上行数据帧的ACK/NACK信息；辅助物理层完成精确的时间补偿。</p>
+<ul>
+<li><p>信道资源规划</p>
+<p>Cd帧包括8个独立的MAC层信道规划帧，每个信道规划帧对应16MHz的信道规划结果，每个信道规划帧采用独创的二进制位图编码方式简洁高效地指明了下一个MAP周期中时频资源在多个用户以及上下行之间如何分配。</p>
+</li>
+<li><p>上行ACK/NACK信息</p>
+<p>HINOC2.0 MAC层增加可选ARQ的功能，用以提高系统传输可靠性。考虑到了ACK/NACK的解调时延和重传帧的处理时延问题，所以Cd帧要位于MAP周期的第5~7个OFDM时隙而非第1~3个OFDM时隙。</p>
+</li>
+</ul>
+</li>
+<li><p>Ru帧</p>
+<p>上行报告帧（Ru帧）仅包括OFDM负载段，OFDM符号数至少为1，最多为7，位于MAP周期的倒数第5~11个OFDM符号。Ru帧的作用同样有三个：承载用户的信道资源请求信息；承载本MAP周期内下行数据帧的ACK/NACK信息；辅助物理层完成检测用户在线状态。</p>
+<ul>
+<li><p>信道资源请求</p>
+<p>HINOC2.0采用了OFDMA的信道资源请求方式，即每个在线用户采用20个子载波就可以完成信道资源请求。极限情况下，Ru帧使用一个OFDM符号就可以完成所有64用户的资源请求。</p>
+</li>
+</ul>
+</li>
+<li><p>Dd帧/Du帧</p>
+<p>MAP周期除去Cd帧、Ru帧以及1个OFDM时长的上下行收发切换间隔（IFG），其他OFDM符号均可以分配给上下行的数据帧（Dd帧/Du帧）。</p>
+<p>HINOC采用TDD的方式，上下行的传输带宽比可以灵活配置。同时基于TDMA/OFDMA的用户多址接入方式，HINOC可以实现高效灵活的带宽分配策略。</p>
+</li>
+</ul>
+<h1 id="HINOC2-0传输速率与效率"><a href="#HINOC2-0传输速率与效率" class="headerlink" title="HINOC2.0传输速率与效率"></a>HINOC2.0传输速率与效率</h1><p>根据以上物理层帧结构的介绍，本节对系统传输速率与效率进行推导。</p>
+<p>MAC层传输速率(Mbps) = 26<em>(146-3-1-1)</em>1920<em> M</em>0.9083*0.9771/ 65536</p>
+<p>其中，MAC层传输速率为去除MAC层和PHY层开销后的传输速率；分母为Pd周期长度65536，单位为us；分子为每个Pd周期内可以传送的MAC层有效数据比特个数。分子中每项数字的具体含义为：</p>
+<ul>
+<li>26：每个Pd周期内的MAP周期个数；</li>
+<li>(146-3-2-1)：每个MAP周期内的可用于数据帧OFDM符号个数，即146个符号扣除3个Cd帧OFDM符号、2个上下行间隔、1个Ru帧OFDM符号；</li>
+<li>1920：每个数据帧OFDM符号中的数据子载波个数；</li>
+<li>M：每个子载波可以携带的比特个数，即QAM调制阶数；</li>
+<li>0.9083：采用BCH (1744, 1920)的编码码率；</li>
+<li>0.9771：MAC层数据帧开销，即在MAC层每个1744bit的数据帧包括16bit的CRC、24bit的数据帧帧头开销 (后续文章会详细介绍MAC层的组帧过程)。</li>
+</ul>
+<p>上式简化，可得:</p>
+<p>MAC层传输速率(Mbps) = 94.64*M</p>
+<p>即MAC层传输速率与QAM调制阶数M成正比。在HINOC系统中，最高QAM调制阶数为4096QAM，即M=12，此时MAC层传输速率为：94.64*12 Mbps= 1136Mbps，超过了1 Gpbs。</p>
+<p>HINOC2.0系统采用子载波分组的自适应调制，其子载波平均调制阶数M在(0,12]之间。下图给出了不同调制阶数下的MAC层传输速率。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-4/mac-rate.jpg" alt="MAC层传输速率"></p>
+<p>传输速率与系统带宽相关，带宽越大，上式中每个Pd帧周期内传输的比特数目越多。通常，我们会引入传输效率的概念对传输带宽进行归一化，即计算在每Hz的传输频带上的有效传输速率，即：</p>
+<p>HINOC2.0传输效率(bit/s/Hz) = MAC传输速率 / 128MHz</p>
+<p>当HINOC采用4096QAM时，系统效率高达8.873 bit/s/Hz；当采用1024QAM时，系统效率也有7.394 bit/s/Hz。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>HINOC2.0物理层设计了非常高效的帧结构。为了保证数据帧的传输效率，HINOC2.0最大限度地降低了其他信令帧、控制帧的开销。每种信令帧、控制帧除了完成MAC层的信令交互与承载之外，还承担了物理层数字接收系统中的多种辅助作用。HINOC2.0高达1136Mbps的MAC层传输速率以及8.873 bit/s/Hz的传输效率优于其他同轴接入技术。</p>
+<p> 在后续MAC层的文章介绍中，我们还将进一步看到在多用户同时在线传输的情况下，由于HINOC采用了TDMA/OFDMA的多址技术，其系统速率的下降是非常小的：64个用户同时占线时的传输速率相比1个用户时的传输效率仅降低40Mbps左右。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HINOC </tag>
+            
+            <tag> 物理层 </tag>
+            
+            <tag> 协议分析 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[HINOC2.0标准介绍(3):星座映射与OFDM调制]]></title>
+      <url>/2017/12/03/hinoc2-0-intro-3/</url>
+      <content type="html"><![CDATA[<p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
+<p><strong>摘要</strong>: 本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。</p>
+<a id="more"></a>
+<hr>
+<p><img src="/2017/12/03/hinoc2-0-intro-3/hinoc_transmiter.jpg" alt="HINOC2.0物理层发送单元功能框图"></p>
+<h1 id="星座映射"><a href="#星座映射" class="headerlink" title="星座映射"></a>星座映射</h1><p>本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式（如上图所示）。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。</p>
+<p>HINOC2.0的星座映射可采用DQPSK、QPSK、8QAM、16QAM、32QAM、64QAM、128QAM、256QAM、512QAM、1024QAM、2048QAM以及4096QAM十二种映射方式。</p>
+<h2 id="DQPSK"><a href="#DQPSK" class="headerlink" title="DQPSK"></a>DQPSK</h2><p>DQPSK是HINOC系统中唯一的一种差分编码调制，用于物理层探测帧（承载MAC层信令帧）、物理层下行控制帧（承载MAC层MAP帧）以及物理层上行报告帧（承载MAC层R帧）。</p>
+<p>使用DQPSK主要是为了提高传输可靠性:</p>
+<ul>
+<li>从误码性能来看，DQPSK要优于8QAM、16QAM等更高阶的调制方式；在采用非相干解调时，DQPSK要差于QPSK调制，但在HINOC系统中，DQPSK与纠错能力强的短BCH码配合使用。所以DQPSK的适用于HINOC系统中信令信息、控制信息等对可靠性要求较高的信息传输。</li>
+<li>从解调过程来看，DQPSK是相位调制且可以采用非相干解调，因此在解调过程中可以省去信道均衡过程。这种特性是HINOC物理层核心技术“分布式信道估计与均衡”的基本前提之一。在后续的文章中，我们将着重讲解HINOC的信道估计机制。</li>
+</ul>
+<h2 id="QPSK、8QAM、…、4096QAM自适应调制"><a href="#QPSK、8QAM、…、4096QAM自适应调制" class="headerlink" title="QPSK、8QAM、…、4096QAM自适应调制"></a>QPSK、8QAM、…、4096QAM自适应调制</h2><p>使用QPSK和多种QAM映射方式是为了更加精细地匹配信道，提高信道传输效率：</p>
+<p>OFDM调制将整个频域带宽划分为多个独立的子载波。OFDM这种多路传输的技术特征只有在配合以下两种技术之一才能更大地发挥其优势：子载波自适应调制、多用户分集增益（仅用于OFDMA模式）。HINOC系统采取了第一种技术方式，虽然HINOC也支持OFDMA模式，但HINOC中的OFDMA不是为了增加用户分集增益，而是为了提高带宽使用的颗粒度。</p>
+<p>下图给出了自适应调制与非自适应调制两种情况下的OFDM系统性能对比。在仿真使用的信道环境中，可以看出采用蓝色曲线(子载波自适应调制)要明显优于红色曲线(不采用自适应调制)。而图中的绿色曲线介于两者之间，该曲线代表子载波分组自适应调制，即多个连续的子载波为一组，以组为基本单位进行自适应调制。</p>
+<p>HINOC采用了图中的绿色曲线，即子载波分组自适应调制。这种设计的主要目的是为了在传输效率、实现复杂度以及信令开销之间进行折中。</p>
+<p> <img src="/2017/12/03/hinoc2-0-intro-3/acm.jpg" alt="自适应调制性能对比"></p>
+<h2 id="2的奇数阶QAM"><a href="#2的奇数阶QAM" class="headerlink" title="2的奇数阶QAM"></a>2的奇数阶QAM</h2><p>在通常的通信系统中，一般仅含有QPSK、16QAM等2的偶数阶QAM映射方式，这主要是因为2的偶数阶QAM星座点数恰好可以排列为正方形，便于映射与解映射的实现；而8QAM、32QAM等2的奇数阶QAM则存在实现困难、BER性能差的问题。然而，如果仅使用偶数阶QAM则存在信道匹配不够精细的问题，即每个调制之间的BER差距为6dB之多。所以，一般系统为了克服该问题会同时引入多种编码码率的FEC方式与QAM方式组合，用以降低多种MCS（调制编码等级）之间的BER差距，达到上文提到的更加精细匹配信道的目的。</p>
+<p>而HINOC系统的设计思想是：QAM映射与解映射的成本远低于FEC编译码器的成本，提高QAM的精细度、减少FEC码率种类的方式更加划算。所以，HINOC系统创新了奇数阶QAM星座映射图样，该星座映射相比与传统的奇数阶QAM相比，性能更优。同时，HINOC中的FEC编码仅有0.54码率和0.91码率两种，而且0.54仅用于极端恶劣情况下。</p>
+<h1 id="OFDM调制"><a href="#OFDM调制" class="headerlink" title="OFDM调制"></a>OFDM调制</h1><p>HINOC2.0采用了正交频分复用（OFDM）调制，其具体参数如下表所示。OFDM是一种多载波调制技术，被广泛应用于现代通信系统。OFDM的调制过程相当于将整个传输信道划分为多路彼此正交的子信道（子载波）。同时，为了抵抗多径串扰，OFDM 系统通常会在每个OFDM 符号前端插入一定的冗余信号，即循环前缀（Cyclic Prefix，CP），即将每个OFDM 符号后端一定时长的信号拷贝到符号前端。</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>取值</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总带宽</td>
+<td>128MHz</td>
+</tr>
+<tr>
+<td>子载波间隔</td>
+<td>62.5kHz</td>
+</tr>
+<tr>
+<td>OFDM符号有效长度<br> (不含循环前缀)</td>
+<td>16us</td>
+</tr>
+<tr>
+<td>循环前缀长度</td>
+<td>0.5us, 1.0us, 2.0us</td>
+</tr>
+<tr>
+<td>子载波个数</td>
+<td>2048</td>
+</tr>
+<tr>
+<td>有效子载波个数</td>
+<td>1982</td>
+</tr>
+<tr>
+<td>数据子载波个数</td>
+<td>1980 (物理层探测帧、物理层下行控制帧) <br> 1920 (物理层数据帧)</td>
+</tr>
+<tr>
+<td>导频子载波个数</td>
+<td>0  (物理层探测帧、物理层下行控制帧)  <br>62 (物理层数据帧)</td>
+</tr>
+<tr>
+<td>空闲子载波个数</td>
+<td>66</td>
+</tr>
+</tbody>
+</table>
+<p>OFDM参数的设计同样需要匹配同轴电缆的信道特征。合理的OFDM参数应同时考虑到传输效率与传输可靠性两方面的因素。</p>
+<h2 id="循环前缀"><a href="#循环前缀" class="headerlink" title="循环前缀"></a>循环前缀</h2><p>循环前缀的作用包括两个方面：a) 抵抗多径串扰；b) 将物理信道对信号的影响由线性卷积转变为圆周卷积。其中，后者是OFDM系统可以采用频域信道估计与均衡的根基。循环前缀越长，其抵抗多径串扰的能力越大，然而由于循环前缀为冗余信息，循环前缀过长不利于传输效率。</p>
+<p>循环前缀的长度应大于最大多径时延。HINOC系统的应用场景为最后100米的同轴宽带接入。考虑最为极端的信号多径反射，其反射路径的长度为200米，即最大多径时延为1us。但由于同轴传输损耗以及反射系数，上述的1us多径即便存在其强度也非常之小。典型的同轴网络环境中，较为强烈的多径时延通常会小于0.5us。所以，在HINOC系统中，循环前缀的长度选择了0.5us、1us和2us三种配置。</p>
+<p>在瀚诺半导体开发的HN1000千兆芯片中，默认使用了1us的循环前缀。此外，1us的循环前缀被部分复用为循环后缀，用以进一步提高传输可靠性。</p>
+<h2 id="子载波间隔"><a href="#子载波间隔" class="headerlink" title="子载波间隔"></a>子载波间隔</h2><p>子载波间隔应小于频域相干带宽。相干带宽与多径时延、节点移动速度相关。根据以上对多径时延的分析，在同轴接入系统中，相干带宽约为1MHz。</p>
+<p>子载波间隔决定OFDM符号长度，决定循环前缀的开销。由于子载波之间需要相互正交，子载波间隔越小，其OFDM符号的有效长度就会越大。在循环前缀长度一定的情况下，其传输开销越小。</p>
+<p>子载波间隔决定OFDM模块实现的复杂度。子载波间隔越小意味着子载波个数越多，则需要的IFFT/FFT的点数越多，硬件复杂度会随其以lg函数增加。</p>
+<p>综合考虑以上因素，HINOC的子载波间隔选取为62.5kHz，OFDM有效长度为16us，1us的循环前缀的开销仅为6.25%。</p>
+<h2 id="导频子载波"><a href="#导频子载波" class="headerlink" title="导频子载波"></a>导频子载波</h2><p>通过上表可以看到，HINOC系统中的导频子载波个数非常少，仅在数据帧存在62个导频子载波，其比例小于1/32。这种设计进一步提高了HINOC物理层的传输效率。然而，导频子载波的减少不利于精确的信道估计，尤其是对使用了1024QAM、4096QAM等高阶调制的系统。信道估计的问题是HINOC的技术核心之一，我们后续将着重介绍HINOC的分布式信道估计技术。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文介绍了HINOC2.0的星座映射和OFDM调制方式，着重解释了这两个部分在协议设计时的考虑和分析。在二层通信系统中，无论是协议框架还是某个模块细节都需要遵循一个设计原则：综合考虑传输可靠性、传输效率以及实现复杂度。该设计原则的本质是：一个优秀的通信协议设计一定是精确地匹配了该协议所在的应用场景以及所用的物理信道。而HINOC一直追求的即是：<strong>专注同轴，服务同轴</strong>。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HINOC </tag>
+            
+            <tag> 物理层 </tag>
+            
+            <tag> 协议分析 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[HINOC2.0标准介绍(2):信道编码]]></title>
+      <url>/2017/12/03/hinoc2-0-intro-2/</url>
+      <content type="html"><![CDATA[<p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
+<p><strong>摘要</strong>: HINOC2.0的信道编码（即前向纠错编码）沿用了HINOC1.0中的BCH，同时增加了对LDPC编码的可选支持。本文简要介绍HINOC2.0在进行信道编码选择时的一些分析与讨论。</p>
+<a id="more"></a>
+<hr>
+<h1 id="HINOC2-0物理层发送单元模块"><a href="#HINOC2-0物理层发送单元模块" class="headerlink" title="HINOC2.0物理层发送单元模块"></a>HINOC2.0物理层发送单元模块</h1><p>HINOC2.0物理层发送单元的功能模块包括扰码、前向纠错编码、星座映射、星座扰码、正交频分复用（OFDM）调制及插入循环前缀、组帧以及基带到射频变换。功能模块的先后顺序如图1所示，其中扰码、前向纠错编码、星座扰码及组帧需要根据不同的数据流类型选择关闭或打开。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-2/hinoc_transmiter.jpg" alt="物理层发送单元"></p>
+<h1 id="HINOC2-0信道编码的选择"><a href="#HINOC2-0信道编码的选择" class="headerlink" title="HINOC2.0信道编码的选择"></a>HINOC2.0信道编码的选择</h1><p>本文简要介绍HINOC的信道编码（即前向纠错编码）的选择。HINOC2.0的信道编码沿用了HINOC1.0中的BCH，同时增加了对LDPC编码的可选支持。下表给出了HINOC2.0使用的信道编码方式。</p>
+<table>
+<thead>
+<tr>
+<th>信道编码方式</th>
+<th>码率</th>
+<th>使用范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BCH (392,248)</td>
+<td>0.63</td>
+<td>物理层上下行探测帧(承载MAC层信令帧)<br>物理层下行控制帧(承载MAC层MAP帧)</td>
+</tr>
+<tr>
+<td>BCH(1920,1040)</td>
+<td>0.54</td>
+<td>物理层上下行数据帧</td>
+</tr>
+<tr>
+<td>BCH(1920,1744)</td>
+<td>0.91</td>
+<td>物理层上下行数据帧</td>
+</tr>
+<tr>
+<td>LDPC(1920,1728)</td>
+<td>0.90</td>
+<td>可选，物理层上下行数据帧</td>
+</tr>
+<tr>
+<td>LDPC(3840,3456)</td>
+<td>0.90</td>
+<td>可选，物理层上下行数据帧</td>
+</tr>
+</tbody>
+</table>
+<p>信道编码需要匹配通信系统的特征，即信道编码的选择需要综合考虑系统的使用场景、业务类型以及信道环境。每一种信道编码方式均可以通过以下4个方面进行描述。</p>
+<h2 id="码率"><a href="#码率" class="headerlink" title="码率"></a>码率</h2><p>码率指信道编码的编码效率。码率直接影响通信系统的频谱效率以及信道编码的纠错能力。由于信道编码通常采用引入冗余信息的方式纠正误码，信道编码的码率对于物理层传输速率和效率具有重要的影响。与无线通信系统相比，同轴电缆信道的衰落特性及环境噪声均远远优于无线传输环境。在未进行信道编码的情况下，同轴电缆通信系统已具有相对较低的误码率，有利于其采用高码率的信道编码。因此，传输速率需求和传输环境决定了同轴电缆通信系统应当采用具有较高码率的信道编码。</p>
+<h2 id="码长"><a href="#码长" class="headerlink" title="码长"></a>码长</h2><p>码长是指分组码的编码块长度。码长的选择需要考虑数据业务类型以及实现的复杂度。如果信道编码的码字较长，其编码器的实现复杂度越高，且译码时延则会越大，从而增加系统的信息传输时延。此外，在互联网中，MAC层承载的数据帧长度从64字节到1518字节变化不等，且业务类型通常为数据突发模式。在数据帧有效信息长度小于码字长度时，需要通过填充无效字符的方式补足长度，造成传输效率的下降。信道编码的码字越长，则由此引起的传输效率下降越严重。根据前述两点，短码长的信道编码更加适用于HINOC通信系统。</p>
+<h2 id="纠错能力"><a href="#纠错能力" class="headerlink" title="纠错能力"></a>纠错能力</h2><p>纠错能力是信道编码对信道传输引起的误码的纠正能力。纠错能力与信道编码类型、码长、码率相关，同时还依赖于信号的误码分布特性。根据通信系统的应用场景以及通信系统的调制技术，通信系统可能出现的误码大致可以分为两种：均匀分布的误码以及随机突发的误码。HINOC系统使用了OFDM调制技术且使用了子载波分组的自适应调制，系统根据各子载波频点的衰落情况选择合适的调制方式。若某个子载波频点的信号质量好，则可采用高阶调制，如1024QAM、4096QAM等；否则，则采用低阶调制甚至关闭。如此，各子载波频点出现误码的概率接近一致，使得总体误码分布近似于均匀的随机分布。因此，HINOC所采用的信道编码应当对均匀随机的误码分布具有较强的纠错能力。</p>
+<h2 id="编译器的实现复杂度"><a href="#编译器的实现复杂度" class="headerlink" title="编译器的实现复杂度"></a>编译器的实现复杂度</h2><p>在满足纠错能力与通信系统效率要求的下，信道编码应当尽可能选择低复杂度的信道编码方式，以达到降低最终的芯片与设备成本的目的。</p>
+<p>综上，适用于HINOC系统的信道编码方式应当具有以下特征：高码率、短码长、适用于均匀随机误码纠正、低复杂度。</p>
+<h1 id="性能仿真"><a href="#性能仿真" class="headerlink" title="性能仿真"></a>性能仿真</h1><p>在HINOC设计过程中，我们仿真对比了各种信道编码类型在上述条件下的纠错能力。仿真时，采用64QAM作为调制方式，仿真信道采用AWGN信道，以模拟误码呈均匀随机分布的应用环境。仿真结果如图所示。其中：</p>
+<ul>
+<li><p>图(a)中的卷积码为DVB-T系统中参数为(171,133)的1/2码率的卷积码，通过截短的方式将码率提高至0.875。</p>
+</li>
+<li><p>图(b)中的turb码采用LTE系统中交织块长度为1040的编码方案，码率为0.919。</p>
+</li>
+<li><p>图(c)中的LDPC码采用G.hn（ITU G.9960）标准中参数为(1080,960)的 LDPC码，由(1152,960)的LDPC码凿孔得到。</p>
+</li>
+<li><p>图(d)中，RS码为 (140,128)的RS码，为(255,243)RS码的截短码，码率为0.914。</p>
+</li>
+</ul>
+<p>4副图中BCH编码选取了相应的参数，以便于与其他信道编码类型做比较。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-2/fec.jpg" alt="BCH码与四种常用信道编码性能对比"></p>
+<p>上述仿真结果可以看出，在高码率、短码长以及误码呈均匀随机分布的情况下，BCH码的纠错能力不弱于Turbo码和LDPC码，而强于卷积码和RS码。</p>
+<p>综上原因，HINOC2.0在标准制仍然采用了BCH编码，其中BCH(1920, 1744)为数据帧使用的主要编码方式，BCH(1920,1040)是为了适用于极端恶劣的信道环境。而HINOC2.0新引入的可选LDPC是为了进一步提高系统的可靠性，根据北京瀚诺半导体的测评，(1920,1728)LDPC的编码增益相比(1920,1744)BCH要高1dB~2dB，但却要带来不少的实现复杂度。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HINOC </tag>
+            
+            <tag> 物理层 </tag>
+            
+            <tag> 协议分析 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[HINOC2.0标准介绍(1):概述]]></title>
+      <url>/2017/12/03/hinoc2-0-intro-1/</url>
+      <content type="html"><![CDATA[<p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
+<p><strong>摘要</strong>: 2016年3月18日，国家新闻出版广电总局批准发布了行业标准GY/T 297-2016《NGB宽带接入系统HINOC2.0物理层和媒体接入控制层技术规范》，自发布之日起实施。该标准规定了高性能同轴电缆宽带接入网络HINOC2.0的物理层传输模式以及媒体接入控制层协议；适用于利用有线电视同轴电缆实现高性能宽带接入的双向数字通信系统。</p>
+<a id="more"></a>
+<hr>
+<h1 id="HINOC2-0标准概述"><a href="#HINOC2-0标准概述" class="headerlink" title="HINOC2.0标准概述"></a>HINOC2.0标准概述</h1><p>HINOC是一种利用有线电视网同轴电缆，实现高性能双向信息传输的宽带接入解决方案。HINOC2.0系统由HINOC网桥（HB）和HINOC调制解调器（HM）构成，典型网络覆盖距离不超过100米，逻辑拓扑采用点到多点结构。该标准定义了对应网络OSI模型的物理层（PHY层）传输模式和媒体接入控制层（MAC层）协议。系统协议栈模型如图所示。</p>
+<p><img src="/2017/12/03/hinoc2-0-intro-1/protocol_stack.jpg" alt="HINOC系统协议栈"></p>
+<ul>
+<li>PHY层定义的信号传输模式包括帧结构、信道编码以及调制技术。</li>
+<li>MAC层实现HINOC2.0系统中的媒体接入控制和业务适配功能，分为汇聚子层（CS）和公共部分子层（CPS），可选包含安全子层（SS）。CS实现CPS功能与高层功能的适配，包括地址学习与转发表构建、优先级映射、数据帧组帧/解帧和数据帧重传；CPS实现媒体接入控制与信道分配、节点接纳/退出和链路维护功能；SS实现身份识别，数据加密/解密和密钥管理功能；SS不在本标准中作定义。</li>
+</ul>
+<p>本标准的<strong>关键技术参数</strong>以及与HINOC1.0标准的对比如下表。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">HINOC2.0(GY/T 297-2016)</th>
+<th style="text-align:center">HINOC1.0(GY/T 265-2012)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">最大传输速率</td>
+<td style="text-align:center">1.14 Gbps</td>
+<td style="text-align:center">> 100 MHz</td>
+</tr>
+<tr>
+<td style="text-align:center">工作频率</td>
+<td style="text-align:center">未限定</td>
+<td style="text-align:center">750 MHz~1006 MHz</td>
+</tr>
+<tr>
+<td style="text-align:center">单信道带宽</td>
+<td style="text-align:center">128 MHz</td>
+<td style="text-align:center">16 MHz</td>
+</tr>
+<tr>
+<td style="text-align:center">双工方式</td>
+<td style="text-align:center">TDD</td>
+<td style="text-align:center">TDD</td>
+</tr>
+<tr>
+<td style="text-align:center">多址方式</td>
+<td style="text-align:center">TDMA, OFDMA</td>
+<td style="text-align:center">TDMA</td>
+</tr>
+<tr>
+<td style="text-align:center">调制方式</td>
+<td style="text-align:center">OFDM, 子载波个数2048，<br>分组自适应调整</td>
+<td style="text-align:center">OFDM, 子载波个数256，<br>子载波自适应调整</td>
+</tr>
+<tr>
+<td style="text-align:center">纠错编码</td>
+<td style="text-align:center">BCH,  LDPC</td>
+<td style="text-align:center">BCH</td>
+</tr>
+<tr>
+<td style="text-align:center">星座映射</td>
+<td style="text-align:center">QPSK~4096QAM</td>
+<td style="text-align:center">QPSK~1024QAM</td>
+</tr>
+<tr>
+<td style="text-align:center">信道分配机制</td>
+<td style="text-align:center">报告-授权机制</td>
+<td style="text-align:center">预约-许可机制</td>
+</tr>
+<tr>
+<td style="text-align:center">测距机制</td>
+<td style="text-align:center">支持</td>
+<td style="text-align:center">不支持</td>
+</tr>
+<tr>
+<td style="text-align:center">重传机制</td>
+<td style="text-align:center">可选支持</td>
+<td style="text-align:center">不支持</td>
+</tr>
+</tbody>
+</table>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> HINOC </tag>
+            
+            <tag> 物理层 </tag>
+            
+            <tag> 协议分析 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[噪声那点儿事]]></title>
+      <url>/2017/12/03/noise-unit/</url>
+      <content type="html"><![CDATA[<p><strong>摘要</strong>： 噪声是通信系统中的顽疾。几乎所有的通信技术都是在抵抗噪声，以便于在噪声环境中获得更优的性能。本篇小文主要总结了关于噪声的几个概念：噪声的强度、各种各样的量纲、噪声系数等。</p>
+<a id="more"></a>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>通信系统的发射机将信息调制到电磁波，并发射到信道中。在信道中，发射信号将受到一些非理想因素的影响，比如路损、多径、多普勒效应等。信号被接收机接收后通过射频电路下变频，然后通过ADC采样到数字基带接收系统。在接收机模拟前端的接收过程中，由于射频电路的非理性因素，信号会进一步受到污染，比如引入了噪声、载波频率偏差、采样时钟频率偏差、相位噪声、IQ不平衡。</p>
+<p>可见一串携带信息的电磁波，由发射到接收经过了多少波折。今天主要记录下噪声那点儿事，即讨论：接收信号的噪声到底有多大。同时引出几个术语，如：噪声系数，接受灵敏度等。</p>
+<h1 id="噪声强度"><a href="#噪声强度" class="headerlink" title="噪声强度"></a>噪声强度</h1><blockquote>
+<p><em>更多信息请参考: <a href="http://en.wikipedia.org/wiki/Thermal_noise" target="_blank" rel="noopener">http://en.wikipedia.org/wiki/Thermal_noise</a></em></p>
+</blockquote>
+<p>在通信系统中，AWGN（加性高斯白噪声）是最常用的噪声模型。热噪声就符合AWGN的特征，热噪声是有电子的随机运动导致，具体是怎么运动的比较高深。热噪声的单边功率谱密度为$N_0 = kT$，其中$k=1.3805*10^{-23}J/K$为玻尔兹曼常数，$T$为绝对温度。常温下的热噪声功率谱密度约为$-174dBm/Hz$，这是通信里面经常碰面的一个常量。</p>
+<p>更进一步，接收机信号中混入的噪声大小可以建模为：</p>
+<p>$\sigma^2_{noise}=-174 dBm/Hz+10\log_{10}(B)+N_F$</p>
+<p>其中$-174 dBm/Hz$为常温下的热噪声功率谱密度，$B$为该接收信号的带宽，$N_F$为噪声系数。任何电路中存在一定量的热噪声，且带宽越大热噪声越大。经过一些电路处理如射频电路中的放大器等，热噪声会被放大(噪声系统)，然后联同有用信号经过ADC采样到基带系统。当然ADC的采样过程同样会引入一些噪声，但这部分不在本文的论述中。本文主要论述ADC入口处的噪声大小。</p>
+<p>插播一下$dB$家族的一些事儿：$dB$、$dBc$、$dBm$、$dBmV$、$dBuV$</p>
+<ul>
+<li><p>$dB$没有量纲，通常表示一个量与另一个量的相对值。</p>
+<p>在电磁学中，对于功率 $dB=10\log_{10}(\cdot)$，对于电压电流$dB=20\log_{10}(\cdot)$</p>
+</li>
+<li><p>$dBc$与$dB$没有啥区别，只是$dBc$通常用于描述对于载波功率的相对大小。</p>
+</li>
+<li><p>$dBm$是一个描述功率绝对值的单位，可以认为是以$1mW$功率为基准的一个比值，转换公式为：$10\log_{10}(\frac{P}{1mW})$。</p>
+<p>类似的，$dBw$表示与$1W$功率的相对值。</p>
+</li>
+<li><p>$dBmV$是一个描述电压绝对值的单位，也可以认为是以$1mV$电压为基准的一个比值，转换公式为：$20\log_{10}(\frac{U}{1mV})$。<br>类似的，dBuV表示与1uV电压的相对值。容易得知dBmV与dBuV的关系：$0dBmV=60dBuV$</p>
+</li>
+</ul>
+<p>如果电阻大小已知，利用$P=\frac{V^2}{R}$，可以得知$dBm$与$dBmV$之间的关系：$0dBm$的功率对应于$-(30+10\log_{10}(R)) dBmV$的电压作用于电阻$R$上。</p>
+<h1 id="噪声系数"><a href="#噪声系数" class="headerlink" title="噪声系数"></a>噪声系数</h1><blockquote>
+<p><em>更多信息请参考: <a href="http://en.wikipedia.org/wiki/Noise_figure" target="_blank" rel="noopener">http://en.wikipedia.org/wiki/Noise_figure</a></em></p>
+</blockquote>
+<p>噪声系数是用以衡量射频电路中信噪比的恶化，很多射频电路产品都会标注出噪声系数大小。对于射频电路中的某一个模块，其噪声系数可以用输入端的信噪比$SNR$与输出端$SNR$的比值表示（通常为$dB$形式）。</p>
+<p>对于有很多模块级联出来的电路，其总体的噪声系数与每一级的噪声系数的关系为：</p>
+<p>$N_F = N_{F1}+\frac{N_{F2}-1}{G1}+ \frac{N_{F3}-1}{G1G2}+…$</p>
+<p>其中$G1、G2$分别为每一级的增益。噪声系数的本质为：热噪声经过一个放大器后，除了输入噪声按照放大因子被放大后，还会引入新的噪声，这些噪声来源于噪声的内部，进而导致系统的$SNR$下降。另外，从上面的公式可以看出，起决定作用的加项为公式中的前面几项，所以一般来讲接收链路中越靠前的放大器应当增益越大。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 通信与网络 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> 物理层 </tag>
+            
+            <tag> 信号处理 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+  
+  
+</search>

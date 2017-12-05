@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HINOC,物理层,协议分析," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接">
+<meta name="keywords" content="HINOC,物理层,协议分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HINOC2.0标准介绍(3):星座映射与OFDM调制">
+<meta property="og:url" content="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/index.html">
+<meta property="og:site_name" content="朝晖的一天">
+<meta property="og:description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/hinoc_transmiter.jpg">
+<meta property="og:image" content="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/acm.jpg">
+<meta property="og:updated_time" content="2017-12-04T16:43:21.573Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HINOC2.0标准介绍(3):星座映射与OFDM调制">
+<meta name="twitter:description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。">
+<meta name="twitter:image" content="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/hinoc_transmiter.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":true},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/"/>
+
+
+
+
+
+  <title>HINOC2.0标准介绍(3):星座映射与OFDM调制 | 朝晖的一天</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">朝晖的一天</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">每一刻都是崭新的</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="朝晖">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝晖的一天">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HINOC2.0标准介绍(3):星座映射与OFDM调制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-03T20:08:18+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-05T00:43:21+08:00">
+                2017-12-05
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/通信与网络/" itemprop="url" rel="index">
+                    <span itemprop="name">通信与网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/03/hinoc2-0-intro-3/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/03/hinoc2-0-intro-3/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/12/03/hinoc2-0-intro-3/" class="leancloud_visitors" data-flag-title="HINOC2.0标准介绍(3):星座映射与OFDM调制">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
+<p><strong>摘要</strong>: 本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。</p>
+<a id="more"></a>
+<hr>
+<p><img src="/2017/12/03/hinoc2-0-intro-3/hinoc_transmiter.jpg" alt="HINOC2.0物理层发送单元功能框图"></p>
+<h1 id="星座映射"><a href="#星座映射" class="headerlink" title="星座映射"></a>星座映射</h1><p>本文简要介绍HINOC2.0系统中的星座映射以及OFDM调制方式（如上图所示）。从信号处理流程的角度来看：在星座映射之前，均为{0,1}比特处理域；星座映射之后，均为复数或实数处理域。也就是说，通信系统的星座映射与调制模块的本质是为二进制比特选取匹配物理信道的传输波形。该传输波形的选取将直接影响传输可靠性、传输速率及信号频谱特性。</p>
+<p>HINOC2.0的星座映射可采用DQPSK、QPSK、8QAM、16QAM、32QAM、64QAM、128QAM、256QAM、512QAM、1024QAM、2048QAM以及4096QAM十二种映射方式。</p>
+<h2 id="DQPSK"><a href="#DQPSK" class="headerlink" title="DQPSK"></a>DQPSK</h2><p>DQPSK是HINOC系统中唯一的一种差分编码调制，用于物理层探测帧（承载MAC层信令帧）、物理层下行控制帧（承载MAC层MAP帧）以及物理层上行报告帧（承载MAC层R帧）。</p>
+<p>使用DQPSK主要是为了提高传输可靠性:</p>
+<ul>
+<li>从误码性能来看，DQPSK要优于8QAM、16QAM等更高阶的调制方式；在采用非相干解调时，DQPSK要差于QPSK调制，但在HINOC系统中，DQPSK与纠错能力强的短BCH码配合使用。所以DQPSK的适用于HINOC系统中信令信息、控制信息等对可靠性要求较高的信息传输。</li>
+<li>从解调过程来看，DQPSK是相位调制且可以采用非相干解调，因此在解调过程中可以省去信道均衡过程。这种特性是HINOC物理层核心技术“分布式信道估计与均衡”的基本前提之一。在后续的文章中，我们将着重讲解HINOC的信道估计机制。</li>
+</ul>
+<h2 id="QPSK、8QAM、…、4096QAM自适应调制"><a href="#QPSK、8QAM、…、4096QAM自适应调制" class="headerlink" title="QPSK、8QAM、…、4096QAM自适应调制"></a>QPSK、8QAM、…、4096QAM自适应调制</h2><p>使用QPSK和多种QAM映射方式是为了更加精细地匹配信道，提高信道传输效率：</p>
+<p>OFDM调制将整个频域带宽划分为多个独立的子载波。OFDM这种多路传输的技术特征只有在配合以下两种技术之一才能更大地发挥其优势：子载波自适应调制、多用户分集增益（仅用于OFDMA模式）。HINOC系统采取了第一种技术方式，虽然HINOC也支持OFDMA模式，但HINOC中的OFDMA不是为了增加用户分集增益，而是为了提高带宽使用的颗粒度。</p>
+<p>下图给出了自适应调制与非自适应调制两种情况下的OFDM系统性能对比。在仿真使用的信道环境中，可以看出采用蓝色曲线(子载波自适应调制)要明显优于红色曲线(不采用自适应调制)。而图中的绿色曲线介于两者之间，该曲线代表子载波分组自适应调制，即多个连续的子载波为一组，以组为基本单位进行自适应调制。</p>
+<p>HINOC采用了图中的绿色曲线，即子载波分组自适应调制。这种设计的主要目的是为了在传输效率、实现复杂度以及信令开销之间进行折中。</p>
+<p> <img src="/2017/12/03/hinoc2-0-intro-3/acm.jpg" alt="自适应调制性能对比"></p>
+<h2 id="2的奇数阶QAM"><a href="#2的奇数阶QAM" class="headerlink" title="2的奇数阶QAM"></a>2的奇数阶QAM</h2><p>在通常的通信系统中，一般仅含有QPSK、16QAM等2的偶数阶QAM映射方式，这主要是因为2的偶数阶QAM星座点数恰好可以排列为正方形，便于映射与解映射的实现；而8QAM、32QAM等2的奇数阶QAM则存在实现困难、BER性能差的问题。然而，如果仅使用偶数阶QAM则存在信道匹配不够精细的问题，即每个调制之间的BER差距为6dB之多。所以，一般系统为了克服该问题会同时引入多种编码码率的FEC方式与QAM方式组合，用以降低多种MCS（调制编码等级）之间的BER差距，达到上文提到的更加精细匹配信道的目的。</p>
+<p>而HINOC系统的设计思想是：QAM映射与解映射的成本远低于FEC编译码器的成本，提高QAM的精细度、减少FEC码率种类的方式更加划算。所以，HINOC系统创新了奇数阶QAM星座映射图样，该星座映射相比与传统的奇数阶QAM相比，性能更优。同时，HINOC中的FEC编码仅有0.54码率和0.91码率两种，而且0.54仅用于极端恶劣情况下。</p>
+<h1 id="OFDM调制"><a href="#OFDM调制" class="headerlink" title="OFDM调制"></a>OFDM调制</h1><p>HINOC2.0采用了正交频分复用（OFDM）调制，其具体参数如下表所示。OFDM是一种多载波调制技术，被广泛应用于现代通信系统。OFDM的调制过程相当于将整个传输信道划分为多路彼此正交的子信道（子载波）。同时，为了抵抗多径串扰，OFDM 系统通常会在每个OFDM 符号前端插入一定的冗余信号，即循环前缀（Cyclic Prefix，CP），即将每个OFDM 符号后端一定时长的信号拷贝到符号前端。</p>
+<table>
+<thead>
+<tr>
+<th><strong>参数</strong></th>
+<th><strong>取值</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>总带宽</td>
+<td>128MHz</td>
+</tr>
+<tr>
+<td>子载波间隔</td>
+<td>62.5kHz</td>
+</tr>
+<tr>
+<td>OFDM符号有效长度<br> (不含循环前缀)</td>
+<td>16us</td>
+</tr>
+<tr>
+<td>循环前缀长度</td>
+<td>0.5us, 1.0us, 2.0us</td>
+</tr>
+<tr>
+<td>子载波个数</td>
+<td>2048</td>
+</tr>
+<tr>
+<td>有效子载波个数</td>
+<td>1982</td>
+</tr>
+<tr>
+<td>数据子载波个数</td>
+<td>1980 (物理层探测帧、物理层下行控制帧) <br> 1920 (物理层数据帧)</td>
+</tr>
+<tr>
+<td>导频子载波个数</td>
+<td>0  (物理层探测帧、物理层下行控制帧)  <br>62 (物理层数据帧)</td>
+</tr>
+<tr>
+<td>空闲子载波个数</td>
+<td>66</td>
+</tr>
+</tbody>
+</table>
+<p>OFDM参数的设计同样需要匹配同轴电缆的信道特征。合理的OFDM参数应同时考虑到传输效率与传输可靠性两方面的因素。</p>
+<h2 id="循环前缀"><a href="#循环前缀" class="headerlink" title="循环前缀"></a>循环前缀</h2><p>循环前缀的作用包括两个方面：a) 抵抗多径串扰；b) 将物理信道对信号的影响由线性卷积转变为圆周卷积。其中，后者是OFDM系统可以采用频域信道估计与均衡的根基。循环前缀越长，其抵抗多径串扰的能力越大，然而由于循环前缀为冗余信息，循环前缀过长不利于传输效率。</p>
+<p>循环前缀的长度应大于最大多径时延。HINOC系统的应用场景为最后100米的同轴宽带接入。考虑最为极端的信号多径反射，其反射路径的长度为200米，即最大多径时延为1us。但由于同轴传输损耗以及反射系数，上述的1us多径即便存在其强度也非常之小。典型的同轴网络环境中，较为强烈的多径时延通常会小于0.5us。所以，在HINOC系统中，循环前缀的长度选择了0.5us、1us和2us三种配置。</p>
+<p>在瀚诺半导体开发的HN1000千兆芯片中，默认使用了1us的循环前缀。此外，1us的循环前缀被部分复用为循环后缀，用以进一步提高传输可靠性。</p>
+<h2 id="子载波间隔"><a href="#子载波间隔" class="headerlink" title="子载波间隔"></a>子载波间隔</h2><p>子载波间隔应小于频域相干带宽。相干带宽与多径时延、节点移动速度相关。根据以上对多径时延的分析，在同轴接入系统中，相干带宽约为1MHz。</p>
+<p>子载波间隔决定OFDM符号长度，决定循环前缀的开销。由于子载波之间需要相互正交，子载波间隔越小，其OFDM符号的有效长度就会越大。在循环前缀长度一定的情况下，其传输开销越小。</p>
+<p>子载波间隔决定OFDM模块实现的复杂度。子载波间隔越小意味着子载波个数越多，则需要的IFFT/FFT的点数越多，硬件复杂度会随其以lg函数增加。</p>
+<p>综合考虑以上因素，HINOC的子载波间隔选取为62.5kHz，OFDM有效长度为16us，1us的循环前缀的开销仅为6.25%。</p>
+<h2 id="导频子载波"><a href="#导频子载波" class="headerlink" title="导频子载波"></a>导频子载波</h2><p>通过上表可以看到，HINOC系统中的导频子载波个数非常少，仅在数据帧存在62个导频子载波，其比例小于1/32。这种设计进一步提高了HINOC物理层的传输效率。然而，导频子载波的减少不利于精确的信道估计，尤其是对使用了1024QAM、4096QAM等高阶调制的系统。信道估计的问题是HINOC的技术核心之一，我们后续将着重介绍HINOC的分布式信道估计技术。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文介绍了HINOC2.0的星座映射和OFDM调制方式，着重解释了这两个部分在协议设计时的考虑和分析。在二层通信系统中，无论是协议框架还是某个模块细节都需要遵循一个设计原则：综合考虑传输可靠性、传输效率以及实现复杂度。该设计原则的本质是：一个优秀的通信协议设计一定是精确地匹配了该协议所在的应用场景以及所用的物理信道。而HINOC一直追求的即是：<strong>专注同轴，服务同轴</strong>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    朝晖
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/" title="HINOC2.0标准介绍(3):星座映射与OFDM调制">https://www.steelblue.tech/2017/12/03/hinoc2-0-intro-3/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HINOC/" rel="tag"># HINOC</a>
+          
+            <a href="/tags/物理层/" rel="tag"># 物理层</a>
+          
+            <a href="/tags/协议分析/" rel="tag"># 协议分析</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+
+        
+
+        
+          
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
+          </div>
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/03/hinoc2-0-intro-2/" rel="next" title="HINOC2.0标准介绍(2):信道编码">
+                <i class="fa fa-chevron-left"></i> HINOC2.0标准介绍(2):信道编码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/03/hinoc2-0-intro-4/" rel="prev" title="HINOC2.0标准介绍(4):物理层帧结构与传输效率">
+                HINOC2.0标准介绍(4):物理层帧结构与传输效率 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+    </div>
+	
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.gif"
+                alt="朝晖" />
+            
+              <p class="site-author-name" itemprop="name">朝晖</p>
+              <p class="site-description motion-element" itemprop="description"><br>在这个世界上，<br>真的有人在过着，<br>你想要的那种生活。<br>而且这个人曾经离你那样近，<br>曾经和你走在同一条平淡的小路上。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#星座映射"><span class="nav-number">1.</span> <span class="nav-text">星座映射</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#DQPSK"><span class="nav-number">1.1.</span> <span class="nav-text">DQPSK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#QPSK、8QAM、…、4096QAM自适应调制"><span class="nav-number">1.2.</span> <span class="nav-text">QPSK、8QAM、…、4096QAM自适应调制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2的奇数阶QAM"><span class="nav-number">1.3.</span> <span class="nav-text">2的奇数阶QAM</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OFDM调制"><span class="nav-number">2.</span> <span class="nav-text">OFDM调制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#循环前缀"><span class="nav-number">2.1.</span> <span class="nav-text">循环前缀</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子载波间隔"><span class="nav-number">2.2.</span> <span class="nav-text">子载波间隔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#导频子载波"><span class="nav-number">2.3.</span> <span class="nav-text">导频子载波</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">朝晖</span>
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments', // el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'n6STXr1xsLkQ4FJOk1zHlrT7-gzGzoHsz',
+        appKey: '9p12D4h06lMXIf1I5D8XFuMl',
+        placeholder: '请扔砖...',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('5');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("n6STXr1xsLkQ4FJOk1zHlrT7-gzGzoHsz", "9p12D4h06lMXIf1I5D8XFuMl");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/needsharebutton/needsharebutton.css">
+
+  
+  
+  <script src="/lib/needsharebutton/needsharebutton.js"></script>
+
+  <script>
+    
+      pbOptions = {};
+      
+          pbOptions.iconStyle = "box";
+      
+          pbOptions.boxForm = "horizontal";
+      
+          pbOptions.position = "bottomCenter";
+      
+          pbOptions.networks = "Weibo,Douban";
+      
+      new needShareButton('#needsharebutton-postbottom', pbOptions);
+    
+    
+  </script>
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
