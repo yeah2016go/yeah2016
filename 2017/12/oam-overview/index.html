@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="协议分析,以太网,MAC层,网络管理," />
 
 
 
@@ -79,16 +79,23 @@
 
 
 
-<meta name="description" content="在这个世界上，真的有人在过着，你想要的那种生活。而且这个人曾经离你那样近，曾经和你走在同一条平淡的小路上。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="朝晖的一天">
-<meta property="og:url" content="https://steelblue.tech/archives/2017/12/index.html">
+<meta name="description" content="摘要：OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网OAM进行了详细定义。本文对以太网的OAM机制进行详细描述。">
+<meta name="keywords" content="协议分析,以太网,MAC层,网络管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="以太网OAM机制概述">
+<meta property="og:url" content="https://steelblue.tech/2017/12/oam-overview/index.html">
 <meta property="og:site_name" content="朝晖的一天">
-<meta property="og:description" content="在这个世界上，真的有人在过着，你想要的那种生活。而且这个人曾经离你那样近，曾经和你走在同一条平淡的小路上。">
+<meta property="og:description" content="摘要：OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网OAM进行了详细定义。本文对以太网的OAM机制进行详细描述。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://steelblue.tech/2017/12/oam-overview/oam_service_interface.jpg">
+<meta property="og:image" content="https://steelblue.tech/2017/12/oam-overview/oam_block_diagram.jpg">
+<meta property="og:image" content="https://steelblue.tech/2017/12/oam-overview/oam_discovery.jpg">
+<meta property="og:image" content="https://steelblue.tech/2017/12/oam-overview/oam_transmit_proccess.jpg">
+<meta property="og:updated_time" content="2017-12-04T16:42:46.194Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="朝晖的一天">
-<meta name="twitter:description" content="在这个世界上，真的有人在过着，你想要的那种生活。而且这个人曾经离你那样近，曾经和你走在同一条平淡的小路上。">
+<meta name="twitter:title" content="以太网OAM机制概述">
+<meta name="twitter:description" content="摘要：OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网OAM进行了详细定义。本文对以太网的OAM机制进行详细描述。">
+<meta name="twitter:image" content="https://steelblue.tech/2017/12/oam-overview/oam_service_interface.jpg">
 
 
 
@@ -118,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="https://steelblue.tech/archives/2017/12/"/>
+  <link rel="canonical" href="https://steelblue.tech/2017/12/oam-overview/"/>
 
 
 
 
 
-  <title>归档 | 朝晖的一天</title>
+  <title>以太网OAM机制概述 | 朝晖的一天</title>
   
 
 
@@ -143,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -281,259 +288,358 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://steelblue.tech/2017/12/oam-overview/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="朝晖">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="朝晖的一天">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h1 class="post-title" itemprop="name headline">以太网OAM机制概述</h1>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-03T21:24:14+08:00">
+                2017-12-03
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-05T00:42:46+08:00">
+                2017-12-05
+              </time>
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 6 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/通信与网络/" itemprop="url" rel="index">
+                    <span itemprop="name">通信与网络</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/oam-overview/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/oam-overview/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/12/oam-overview/" class="leancloud_visitors" data-flag-title="以太网OAM机制概述">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p><strong>摘要</strong>：OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网OAM进行了详细定义。本文对以太网的OAM机制进行详细描述。</p>
+<a id="more"></a>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><strong>概述</strong></h1><p>OAM(Operations, Administration, and Maintenance)机制可以让运营商更加便利地监控网络质量以及快速定位链路故障。IEEE802.3-2005 Clause57对以太网的OAM进行了详细定义。OAM子层是IEEE802.3的可选子层，位于LLC层（或MAC Client）和MAC层（或MAC Control子层）之间，主要功能有：</p>
+<ul>
+<li>远端故障指示：当本地接收链路出现故障时，可以指示对端设备；</li>
+<li>远端环回：可提供在数据链路层上的帧环回功能，以便测试链路性能以及定位故障位置；</li>
+<li>链路监视：可指示对端多种的链路事件、可查询各种MIB变量。</li>
+</ul>
+<h1 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a><strong>控制流程</strong></h1><p>OAM子层与上下层之间的服务接口如下图所示。</p>
+<p><img src="/2017/12/oam-overview/oam_service_interface.jpg" alt="OAM子层的服务接口"></p>
+<p>OAM Client在OAM机制中起到关键的功能，但其不在IEEE802.3-2005 Clause57的定义范围之内。其作用有：</p>
+<ul>
+<li>使能和配置OAM子层实体；</li>
+<li>在OAM发现过程（OAM Discovery Process）中负责监视收到的OAMPDU，并根据本地和对端的状态和配置决定是否允许在对端之间建立OAM连接；</li>
+<li>在OAM建立之后，负责生成OAMPDU Response或者过滤非法的OAMPDU；</li>
+<li>负责管理远端回环的开启与关闭；</li>
+<li>负责发送和接收关于各种链路事件(Link Events)的特殊PAMPDU。</li>
+</ul>
+<p>OAM子层对上层MAC Client提供标准的IEEE802.3 MAC服务接口(<code>MA_DATA.request</code>以及<code>MA_DATA.indication</code>)；OAM子层对OAM Client提供两组服务接口，控制信息的交互采用<code>OAM_CTL.request</code>和<code>OAM_CTL.indication</code>，数据信息的交互采用<code>OAMPDU.request</code>和<code>OAMPDU.request</code>。在OAM子层内，所有的发送帧(*.request)均最终通过复用器(Multiplexer)复用并调用底层的标准IEEE802.3 MAC服务接口<code>MA_DATA.request</code>进行发送；OAM子层通过底层的服务接口<code>MA_DATA.indication</code>获取接收帧，并通过解析器(Parser)解析分路到MAC_Client、OAM_Client或直接环回置Multiplexer，如下图（OAM子层的内部模块关系图）所示。</p>
+<p><img src="/2017/12/oam-overview/oam_block_diagram.jpg" alt="OAM子层的内部模块关系图"></p>
+<p>上图中，Control为OAM子层中的控制模块，该模块除了负责提供OAM Client与OAM子层间的服务接口，还负责以下功能：</p>
+<ul>
+<li>根据OAM Client的控制信息，负责OAM<strong>发现过程</strong>；</li>
+<li>负责OAMPDU（OAM协议数据单元，可以理解为OAM帧）的<strong>传输过程</strong>；</li>
+<li>负责OAMPDU的<strong>接收规则</strong>。</li>
+</ul>
+<p>这三个过程组成了OAM机制的核心工作流程，下文将详细介绍。</p>
+<h2 id="OAM发现过程"><a href="#OAM发现过程" class="headerlink" title="OAM发现过程"></a><strong>OAM发现过程</strong></h2><p>OAM发现过程用于判断对端设备是否具有OAM功能以及其OAM的配置是否相匹配，是双方设备进行OAM交互的第一个步骤。OAM发现过程如下图所示：</p>
+<p><img src="/2017/12/oam-overview/oam_discovery.jpg" alt="OAM发现过程状态转移图"></p>
+<ul>
+<li><p>若当前未处于发现过程，检查以下触发条件是否满足：</p>
+<ul>
+<li>OAM子层的复位信号(<code>BEGIN</code>)置为<code>TURE</code></li>
+<li>定时器(<code>local_lost_link_timer</code>)已超时(在一定时间内没有任何OAMPDU)</li>
+<li>底层上报本地接收链路存在故障(<code>local_link_status = FAIL</code>)</li>
+</ul>
+</li>
+<li><p>若满足上述任何一个触发条件，OAM子层则进入发现过程的<code>FAULT state</code>。在该状态，停止定时器<code>local_lost_link_timer</code>；将<code>local_stable</code>置为<code>FASLE</code>（意为本地设备没有接收到或不认可远端设备的OAM状态信息）；若<code>local_link_stautus = FAIL</code>，则将<code>local_pdu</code>置为<code>LF_INFO</code>，否则将<code>local_pdu</code>置为<code>RX_INFO</code>。</p>
+<p><code>local_pdu</code>管理着发现过程中哪种OAMPDU可以被发送或接收：</p>
+<ul>
+<li><code>LF_INFO</code>：仅有Information OAMPDU可以被发送且该Information OAMPDU的Link Fault critical link event被标记，同时不允许该OAMPDU携带任何Information TLV； 仅允许接收Information OAMPDU</li>
+<li><code>RX_INFO</code>: 不允许发送任何OAMPDU；仅允许接收Information OAMPDU</li>
+<li><code>INFO</code>: 仅允许发送和接收Information OAMPDU</li>
+<li><code>ANY</code>：可以发送和接收任何OAMPDU</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>当<code>local_link_status = OK</code>时(底层接收链路恢复正常)，设备检查自己的OAM模式(<code>local_oam_mode</code>)：</p>
+<ul>
+<li>若设备为主动模式(<code>local_oam_mode = ACTIVE</code>)，则进入<code>ACTIVE_SEND_LOCAL</code>状态，将<code>local_pdu</code>置为INFO，并开始发送仅包含Local Information TLV的Information OAMPDU；</li>
+<li>若设备为主动模式(<code>local_oam_mode = PASSIVE</code>)，则进入<code>PASSIVE_WAIT_LOCAL</code>状态，将<code>local_pdu</code>置为<code>RX_INFO</code>即等待接收含有Local Information TLV的Information OAMPDU；</li>
+</ul>
+</li>
+<li><p>当设备接收到Information OAMPDU并其中含有Local Information TLV，则设备进入<code>SEND_LOCAL_REMOTE</code>状态。在该状态中，<code>local_stable</code>置为<code>FASLE</code>；并将<code>local_pdu</code>置为<code>INFO</code>，开始发送同时包含Local Information TLV和Remote Information TLV的Information OAMPDU。</p>
+<p>当任意时刻本地设备或对端设备发生变化导致本地的OAM Client不认可对端设备的参数设置(<code>local_satisfied = FALSE</code>)，则本地设备会重新进入到<code>SEND_LOCAL_REMOTE</code>状态。</p>
+</li>
+<li><p>当本地和远端的OAM参数设置相匹配时(<code>local_satisfied = TRUE</code>)，则设备进入<code>SEND_LOCAL_REMOTE_OK</code>状态。在该状态中，<code>local_stable</code>置为<code>TRUE</code>，<code>local_pdu</code>置为<code>INFO</code>。</p>
+<p>当任意时刻本地设备发生变化导致对端的OAM Client不认可本地设备的参数设置时(<code>remote_stable = FALSE</code>)，则会本地设备重新进入到<code>SEND_LOCAL_REMOTE_OK</code>状态。</p>
+</li>
+<li><p>当本地设备接收到远端认可本地参数设备时，本地设备进入<code>SEND_ANY</code>状态。该状态是OAM链路通信中的期望状态。</p>
+</li>
+</ul>
+<p>OAM发现过程中，两端的设备使用OAMPDU的<code>Flag</code>字段中的<code>Remote Stable</code>、<code>Remote Evaluating</code>、<code>Local Stable</code>以及<code>Local Evaluationg</code>交互两端的发现状态。其中：</p>
+<ul>
+<li><code>Remote Stable</code>和<code>Remote Evaluating</code>为上一次接收到的OAMPDU中的<code>Local Stable</code>和<code>Local Evaluating</code>的拷贝；</li>
+<li><code>Local Stable</code>和<code>Local Evaluating</code>编码的含义为：<ul>
+<li>01： 发现过程进行中，尚未结束；</li>
+<li>00： 发现过程无法完成，本端设备不认可对端设备的设置；</li>
+<li>10： 发现过程完成，本端设备认可对端设备的设置</li>
+<li>11`： 保留</li>
+</ul>
+</li>
+</ul>
+<h2 id="传输过程"><a href="#传输过程" class="headerlink" title="传输过程"></a><strong>传输过程</strong></h2><p>传输过程是指OAM子层发送任意OAMPDU的控制过程。具体流程如下图所示：</p>
+<p><img src="/2017/12/oam-overview/oam_transmit_proccess.jpg" alt="OAM发送过程状态转移图"></p>
+<ul>
+<li>OAM子层复位信号(<code>BEGIN</code>）置为<code>TRUE</code>后，OAM子层进入<code>RESET</code>状态。在该状态，将开启一个1秒钟的定时器(<code>pdu_timer</code>)以及将最大可以发送的OAMPDU数目重置为10(<code>pdu_cnt = 10</code>)</li>
+</ul>
+<ul>
+<li><p><code>Reset</code>状态结束后，将进入<code>WAIT_FOR_TX</code>状态。在该状态中等待三种事件的发生，并进行不同的状态跳转：</p>
+<ul>
+<li>pdu_timer超时。若pdu_timer超时且之前有OAMPDU发出(pdu_cnt&lt;10)，则回到<code>RESET</code>状态；若超时前没有任何OAMPDU发出，则进入<code>TX_OAMPDU</code>状态，发送一个Information OAMPDU，以免重新进入发现过程；</li>
+<li><code>pdu_timer</code>未超时，收了发送有效的发送请求信号(<code>valid_pdu_req</code>)，则进入<code>DEC_PDU_CNT</code>状态；<code>valid_pdu_req</code>有效的条件有两个：1)若当<code>local_pdu</code>为<code>INFO</code>或<code>ANY</code>时OAM Client发出一个<code>OAMPDU.request</code>且<code>pdu_cnt</code>不为0；2) OAM Client发出一个<code>OAM_CTRL.request</code>且<code>local_pdu</code>为<code>ANY</code>(发现过程已完成)。</li>
+</ul>
+</li>
+<li><p>在<code>DEC_PDU_CNT</code>状态中，若请求发送的OAMPDU不携带紧急链路事件的标记位(<code>pdu_req = NORMAL</code>)则对<code>local_pdu</code>进行减一；</p>
+</li>
+<li><p>在<code>TX_OAMPDU</code>状态中，生成<code>CTL:OAMI.request</code>（然后将由复用器Multiplexer调用进行底层服务进行发送）；而后，若<code>pdu_timer</code>超时则跳转到<code>RESET</code>状态，反之，跳转到<code>WAIT_FOR_TX</code>状态。</p>
+</li>
+</ul>
+<h2 id="接收规则"><a href="#接收规则" class="headerlink" title="接收规则"></a><strong>接收规则</strong></h2><p>在OAM子层的接收链路中，解析器Parser通过CTL:OAMI.indication通知Control接收到一个OAMPDU，Control根据以下的接收规则确定是否向OAM Client产生OAMPDU.indication：</p>
+<ul>
+<li>当local_pdu不为ANY时，仅有Information OAMPDU会上报，其余的OAMPDU将被丢弃；</li>
+<li>当local_pdu为ANY时，所有的OAMPDU均会被上报，包括一些未知Code Field域的OAMPDU。</li>
+</ul>
+<h1 id="主要功能"><a href="#主要功能" class="headerlink" title="主要功能"></a><strong>主要功能</strong></h1><p>如上所述，OAM的主要功能包括：远端故障指示、远端环回以及链路监视。以下我们将简要论述。</p>
+<blockquote>
+<p>参考<br>[<a href="http://www.h3c.com.cn/MiniSite/Technology_Circle/Net_Reptile/The_One/Home/Catalog/200911/655240_97665_0.htm" target="_blank" rel="noopener">http://www.h3c.com.cn/MiniSite/Technology_Circle/Net_Reptile/The_One/Home/Catalog/200911/655240_97665_0.htm</a>]</p>
+</blockquote>
+<h2 id="远端故障指示"><a href="#远端故障指示" class="headerlink" title="远端故障指示"></a><strong>远端故障指示</strong></h2><p>远端故障指示是告知对端发生了严重的错误，会导致链路不可用。远端故障指示采用OAM协议报文中Flags域中的3个比特位通知对端。当发生这些事件时，会立即产生一个比特位置位Information报文，在之后发送的其他报文中，该比特位也会置位，直到故障解除。</p>
+<ul>
+<li>链路故障(Link Fault)：对端链路信号丢失，在光口上，收端收不到信号时，在发端发送。在电口上，一般不会产生这个事件，因为在电口上，采用RJ-45接头的收发端在一根电缆中，仅有收端出现故障而发端无故障的概率几乎没有。</li>
+<li>临终遗言(Dying Gasp)：不可预知的状态发生，比如电源中断，则利用电池或电容中的电量发出报文。</li>
+<li>紧急事件(Critical Event)：不能确定的紧急事件发生。</li>
+</ul>
+<h2 id="链路监视"><a href="#链路监视" class="headerlink" title="链路监视"></a><strong>链路监视</strong></h2><p>链路监视用于发现错误和低效的连接。802.3 OAM定义了四种一般链路事件来描述链路的质量。如果端口上所收到的报文的错误统计在给定的周期内达到了预设的值，OAM就报错，同时，发送一般链路事件报文给对端，告诉对端：你发出的报文错误很多。这种OAM报文的Code为01。</p>
+<ul>
+<li>错误信号周期(Errored Symbol Period) ：就是误码率，目前不支持误码率的检测。</li>
+<li>错误帧(Errored Frame)：在指定时间内的错误帧数超过阈值，会产生本事件。</li>
+<li>错误帧周期(Errored Frame Period)：在指定的连续帧数内的错误帧数超过阈值，会产生本事件。</li>
+<li>错误帧秒数(Errored Frame Seconds Summary)：若在一秒内有错误帧出现，则计数为一个错误帧秒数；在指定的时间内的错误帧秒数超过阈值，会产生本事件。</li>
+</ul>
+<p>应用中可以根据具体的要求选用一种或几种事件，设置阈值和周期，对链路进行监控。</p>
+<h2 id="远端环回"><a href="#远端环回" class="headerlink" title="远端环回"></a><strong>远端环回</strong></h2><p>由于处于物理层，802.3的环回同其他OAM类协议的环回有所不同。802.3的环回是一种物理状态，而不是报文处理流程。</p>
+<p>远端环回分为主动端和被动端。主动端发起环回，向被动端发送一个回环报文，被动端收到环回报文后，将本端设置为环回状态。在这种状态下，被动端收到的所有非OAM报文均被原封不动地返回且不再发送除OAM报文之外的其他报文。这时，主动端将收到的所有非OAM报文丢弃。这种状态是一种测试状态，显然，其他协议将不能正常工作，对于上层协议来说，该链路实际上处于Down状态。</p>
+<p>OAM的环回功能使得主动端能够单独对双向物理链路进行检测，这时，它可以发送测试报文，对链路进行探测，确定链路的通断、性能等。主动端最后发送解除环回的报文，使被动端恢复正常。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    朝晖
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://steelblue.tech/2017/12/oam-overview/" title="以太网OAM机制概述">https://steelblue.tech/2017/12/oam-overview/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/协议分析/" rel="tag"># 协议分析</a>
+          
+            <a href="/tags/以太网/" rel="tag"># 以太网</a>
+          
+            <a href="/tags/MAC层/" rel="tag"># MAC层</a>
+          
+            <a href="/tags/网络管理/" rel="tag"># 网络管理</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
         
-        
+
         
 
         
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2017">2017</h1>
+          <div id="needsharebutton-postbottom">
+            <span class="btn">
+              <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </span>
           </div>
         
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/oam-overview/" itemprop="url">
-              
-                <span itemprop="name">以太网OAM机制概述</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T21:24:14+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+        </div>
+      
       
 
-        
-        
-        
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/hinoc2-0-intro-4/" rel="next" title="HINOC2.0标准介绍(4):物理层帧结构与传输效率">
+                <i class="fa fa-chevron-left"></i> HINOC2.0标准介绍(4):物理层帧结构与传输效率
+              </a>
+            
+          </div>
 
-        
-        
+          <span class="post-nav-divider"></span>
 
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/hinoc2-0-intro-4/" itemprop="url">
-              
-                <span itemprop="name">HINOC2.0标准介绍(4):物理层帧结构与传输效率</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T20:31:35+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/hinoc2-0-intro-3/" itemprop="url">
-              
-                <span itemprop="name">HINOC2.0标准介绍(3):星座映射与OFDM调制</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T20:08:18+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/hinoc2-0-intro-2/" itemprop="url">
-              
-                <span itemprop="name">HINOC2.0标准介绍(2):信道编码</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T18:58:36+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/hinoc2-0-intro-1/" itemprop="url">
-              
-                <span itemprop="name">HINOC2.0标准介绍(1):概述</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T17:58:36+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/noise-unit/" itemprop="url">
-              
-                <span itemprop="name">噪声那点儿事</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-12-03T17:03:40+08:00"
-              content="2017-12-03" >
-          12-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-    </div>
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -541,6 +647,13 @@
 
 
           
+  
+    <div class="comments" id="comments">
+    </div>
+	
+  
+
+
 
         </div>
         
@@ -563,8 +676,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -630,6 +752,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#控制流程"><span class="nav-number">2.</span> <span class="nav-text">控制流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#OAM发现过程"><span class="nav-number">2.1.</span> <span class="nav-text">OAM发现过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传输过程"><span class="nav-number">2.2.</span> <span class="nav-text">传输过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接收规则"><span class="nav-number">2.3.</span> <span class="nav-text">接收规则</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主要功能"><span class="nav-number">3.</span> <span class="nav-text">主要功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#远端故障指示"><span class="nav-number">3.1.</span> <span class="nav-text">远端故障指示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链路监视"><span class="nav-number">3.2.</span> <span class="nav-text">链路监视</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远端环回"><span class="nav-number">3.3.</span> <span class="nav-text">远端环回</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -757,6 +895,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
 
   
 
