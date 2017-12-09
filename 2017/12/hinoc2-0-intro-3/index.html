@@ -443,6 +443,7 @@
 <h2 id="2的奇数阶QAM"><a href="#2的奇数阶QAM" class="headerlink" title="2的奇数阶QAM"></a>2的奇数阶QAM</h2><p>在通常的通信系统中，一般仅含有QPSK、16QAM等2的偶数阶QAM映射方式，这主要是因为2的偶数阶QAM星座点数恰好可以排列为正方形，便于映射与解映射的实现；而8QAM、32QAM等2的奇数阶QAM则存在实现困难、BER性能差的问题。然而，如果仅使用偶数阶QAM则存在信道匹配不够精细的问题，即每个调制之间的BER差距为6dB之多。所以，一般系统为了克服该问题会同时引入多种编码码率的FEC方式与QAM方式组合，用以降低多种MCS（调制编码等级）之间的BER差距，达到上文提到的更加精细匹配信道的目的。</p>
 <p>而HINOC系统的设计思想是：QAM映射与解映射的成本远低于FEC编译码器的成本，提高QAM的精细度、减少FEC码率种类的方式更加划算。所以，HINOC系统创新了奇数阶QAM星座映射图样，该星座映射相比与传统的奇数阶QAM相比，性能更优。同时，HINOC中的FEC编码仅有0.54码率和0.91码率两种，而且0.54仅用于极端恶劣情况下。</p>
 <h1 id="OFDM调制"><a href="#OFDM调制" class="headerlink" title="OFDM调制"></a>OFDM调制</h1><p>HINOC2.0采用了正交频分复用（OFDM）调制，其具体参数如下表所示。OFDM是一种多载波调制技术，被广泛应用于现代通信系统。OFDM的调制过程相当于将整个传输信道划分为多路彼此正交的子信道（子载波）。同时，为了抵抗多径串扰，OFDM 系统通常会在每个OFDM 符号前端插入一定的冗余信号，即循环前缀（Cyclic Prefix，CP），即将每个OFDM 符号后端一定时长的信号拷贝到符号前端。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -489,6 +490,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>OFDM参数的设计同样需要匹配同轴电缆的信道特征。合理的OFDM参数应同时考虑到传输效率与传输可靠性两方面的因素。</p>
 <h2 id="循环前缀"><a href="#循环前缀" class="headerlink" title="循环前缀"></a>循环前缀</h2><p>循环前缀的作用包括两个方面：a) 抵抗多径串扰；b) 将物理信道对信号的影响由线性卷积转变为圆周卷积。其中，后者是OFDM系统可以采用频域信道估计与均衡的根基。循环前缀越长，其抵抗多径串扰的能力越大，然而由于循环前缀为冗余信息，循环前缀过长不利于传输效率。</p>
 <p>循环前缀的长度应大于最大多径时延。HINOC系统的应用场景为最后100米的同轴宽带接入。考虑最为极端的信号多径反射，其反射路径的长度为200米，即最大多径时延为1us。但由于同轴传输损耗以及反射系数，上述的1us多径即便存在其强度也非常之小。典型的同轴网络环境中，较为强烈的多径时延通常会小于0.5us。所以，在HINOC系统中，循环前缀的长度选择了0.5us、1us和2us三种配置。</p>
@@ -664,7 +666,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1405,7 +1407,7 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   
 
 

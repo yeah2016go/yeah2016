@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="HINOC,物理层,协议分析," />
+  <meta name="keywords" content="ESLLI,最小二乘,k-最邻近,Python," />
 
 
 
@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍了HINOC2.0物理层帧结构以及其设计过程，并给出了HINOC2.0 MAC层传输速率和效率的理论计算。">
-<meta name="keywords" content="HINOC,物理层,协议分析">
+<meta name="description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是E">
+<meta name="keywords" content="ESLLI,最小二乘,k-最邻近,Python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HINOC2.0标准介绍(4):物理层帧结构与传输效率">
-<meta property="og:url" content="https://steelblue.tech/2017/12/hinoc2-0-intro-4/index.html">
+<meta property="og:title" content="ESLII-2-1 监督学习概述">
+<meta property="og:url" content="https://steelblue.tech/2017/12/ESLII-ch2-1 - 副本/index.html">
 <meta property="og:site_name" content="朝晖的一天">
-<meta property="og:description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍了HINOC2.0物理层帧结构以及其设计过程，并给出了HINOC2.0 MAC层传输速率和效率的理论计算。">
+<meta property="og:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://steelblue.tech/2017/12/hinoc2-0-intro-4/phy-frame.jpg">
-<meta property="og:image" content="https://steelblue.tech/2017/12/hinoc2-0-intro-4/phy-frame-timing.jpg">
-<meta property="og:image" content="https://steelblue.tech/2017/12/hinoc2-0-intro-4/mac-rate.jpg">
-<meta property="og:updated_time" content="2017-12-04T16:43:11.546Z">
+<meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1%20-%20副本/example.png">
+<meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1%20-%20副本/ls-regression.png">
+<meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1%20-%20副本/15-knn.png">
+<meta property="og:updated_time" content="2017-12-09T07:54:37.413Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HINOC2.0标准介绍(4):物理层帧结构与传输效率">
-<meta name="twitter:description" content="本文首发于‘瀚诺观察’微信公众号 摘要: 本文简要介绍了HINOC2.0物理层帧结构以及其设计过程，并给出了HINOC2.0 MAC层传输速率和效率的理论计算。">
-<meta name="twitter:image" content="https://steelblue.tech/2017/12/hinoc2-0-intro-4/phy-frame.jpg">
+<meta name="twitter:title" content="ESLII-2-1 监督学习概述">
+<meta name="twitter:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
+<meta name="twitter:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1%20-%20副本/example.png">
 
 
 
@@ -124,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="https://steelblue.tech/2017/12/hinoc2-0-intro-4/"/>
+  <link rel="canonical" href="https://steelblue.tech/2017/12/ESLII-ch2-1 - 副本/"/>
 
 
 
 
 
-  <title>HINOC2.0标准介绍(4):物理层帧结构与传输效率 | 朝晖的一天</title>
+  <title>ESLII-2-1 监督学习概述 | 朝晖的一天</title>
   
 
 
@@ -301,7 +301,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://steelblue.tech/2017/12/hinoc2-0-intro-4/">
+    <link itemprop="mainEntityOfPage" href="https://steelblue.tech/2017/12/ESLII-ch2-1 - 副本/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="朝晖">
@@ -318,7 +318,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">HINOC2.0标准介绍(4):物理层帧结构与传输效率</h1>
+          <h1 class="post-title" itemprop="name headline">ESLII-2-1 监督学习概述</h1>
         
 
         <div class="post-meta">
@@ -330,8 +330,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-03T20:31:35+08:00">
-                2017-12-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-08T23:11:59+08:00">
+                2017-12-08
               </time>
             
 
@@ -346,8 +346,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-05T00:43:11+08:00">
-                2017-12-05
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-09T15:54:37+08:00">
+                2017-12-09
               </time>
             
           </span>
@@ -365,8 +365,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/通信与网络/" itemprop="url" rel="index">
-                    <span itemprop="name">通信与网络</span>
+                  <a href="/categories/ESLII/" itemprop="url" rel="index">
+                    <span itemprop="name">ESLII</span>
                   </a>
                 </span>
 
@@ -383,8 +383,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/12/hinoc2-0-intro-4/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/hinoc2-0-intro-4/" itemprop="commentCount"></span>
+                <a href="/2017/12/ESLII-ch2-1 - 副本/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/ESLII-ch2-1 - 副本/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -392,7 +392,7 @@
 
           
           
-             <span id="/2017/12/hinoc2-0-intro-4/" class="leancloud_visitors" data-flag-title="HINOC2.0标准介绍(4):物理层帧结构与传输效率">
+             <span id="/2017/12/ESLII-ch2-1 - 副本/" class="leancloud_visitors" data-flag-title="ESLII-2-1 监督学习概述">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -423,126 +423,62 @@
       
 
       
-        <p><em>本文首发于‘瀚诺观察’微信公众号</em></p>
-<p><strong>摘要</strong>: 本文简要介绍了HINOC2.0物理层帧结构以及其设计过程，并给出了HINOC2.0 MAC层传输速率和效率的理论计算。</p>
+        <p><strong>摘要</strong> ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用<code>Python</code> 实现一遍以加深理解，也能练习学习一下<code>Python</code>。这篇是ESLII第二章一些总结。</p>
 <a id="more"></a>
-<hr>
-<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>HINOC2.0物理层分为6种帧，下行帧包括：下行探测帧（Pd帧）、下行数据帧（Dd帧）、下行控制帧（Cd帧）；上行帧包括：上行探测帧（Pu帧）、上行数据帧（Du帧）和上行报告帧（Ru帧）。上下行探测帧用于承载MAC层信令帧，上下行数据帧用于承载MAC层数据帧，下行控制帧用于承载MAC层媒体接入规划（MAP）帧，上行报告帧用于承载MAC层报告（R）帧。</p>
-<p><img src="/2017/12/hinoc2-0-intro-4/phy-frame.jpg" alt="物理层帧结构"></p>
-<p>6种帧的时域构成如上图所示，包括前导序列和OFDM负载段两部分。各种帧的详细配置如下表所示。前导序列的长度仅为4us，仅存在于Pd帧与Pu帧，用于接收机进行帧同步以及频率同步；负载段包括整数个OFDM符号，用于MAC层信令或数据的传输。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">帧类型</th>
-<th style="text-align:center">前导序列</th>
-<th style="text-align:center">负载段</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">Pd帧</td>
-<td style="text-align:center">前导序列A</td>
-<td style="text-align:center">负载段A</td>
-</tr>
-<tr>
-<td style="text-align:center">Dd帧</td>
-<td style="text-align:center">无</td>
-<td style="text-align:center">负载段B</td>
-</tr>
-<tr>
-<td style="text-align:center">Cd帧</td>
-<td style="text-align:center">无</td>
-<td style="text-align:center">负载段C</td>
-</tr>
-<tr>
-<td style="text-align:center">Pu帧</td>
-<td style="text-align:center">前导序列B</td>
-<td style="text-align:center">负载段A</td>
-</tr>
-<tr>
-<td style="text-align:center">Du帧</td>
-<td style="text-align:center">无</td>
-<td style="text-align:center">负载段B</td>
-</tr>
-<tr>
-<td style="text-align:center">Ru帧</td>
-<td style="text-align:center">无</td>
-<td style="text-align:center">负载段D</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h1 id="时序关系"><a href="#时序关系" class="headerlink" title="时序关系"></a>时序关系</h1><p>下图是HINOC2.0物理层6种帧的时序关系图。该图是理解HINOC物理层行为和传输效率的关键。</p>
-<p><img src="/2017/12/hinoc2-0-intro-4/phy-frame-timing.jpg" alt="HINOC2.0物理帧时序关系"></p>
+<h1 id="基本概念、术语与标记"><a href="#基本概念、术语与标记" class="headerlink" title="基本概念、术语与标记"></a>基本概念、术语与标记</h1><p><strong>统计学习</strong>又称统计机器学习，是关于计算机基于数据构建概率统计模型并运用模型对数据进行预测与分析的一种学科。<strong>监督学习</strong>(Supervised Learning)是统计机器学习中应用最为广泛的一种，监督学习通过已有的训练样本，即已知输入以及其对应的输出，在某个评价准则下去训练得到一个最优模型，再利用这个模型将新的输入映射为相应的输出。</p>
+<p>在统计文献中，输入(input)又被称为自变量(independent variable)或预测变量(predictor)，在模式识别文献中，也被称为特征(feature)；输出(ouput)又被称之为因变量(dependent variable)或者目标变量(target variable)或者响应(response)。在ESLII中，这些命名经常交替使用。</p>
+<p>在ESLII中，各种术语通常使用以下约定好的标记方法：</p>
 <ul>
-<li><p>Pd周期</p>
-<p>在HINOC系统中，Pd帧周期性发送，相邻两个Pd帧的起始时间间隔为65536us，称为Pd周期。</p>
-</li>
-<li><p>MAP周期</p>
-<p>在Pd周期内，除去Pd帧和Pu帧之外的信道资源在时间上被划分若干个MAP周期。MAP周期为HINOC最小调度周期。MAP周期的时间长度和个数取决于OFDM循环前缀参数配置。</p>
-<p>当OFDM循环前缀为典型值1us时，MAP周期的长度为2482us；每个MAP周期包括连续的146个OFDM符号，即146个时隙；每个Pd周期内包括26个MAP周期。</p>
-</li>
-<li><p>Pd帧/Pu帧</p>
-<p>下行探测帧（Pd帧）是HINOC网络的心跳帧。Pd帧包括4us的前导序列以及2个OFDM符号，总长为38us，占整个长65536us的Pd周期的万分之6，开销极其之小。</p>
-<p>上行探测帧（Pu帧）位于每个Pd周期中间的Pu帧组内。Pu帧组时隙由9个连续放置的Pu帧时隙及其帧间隔构成。其中第5个Pu帧时隙起始时刻位于Pd周期的中心时刻，与相邻Pd帧的起始时刻间隔为32768us。HINOC1.0系统是不存在Pu帧组的概念的，即1.0系统中每个Pd帧仅包括1个Pu帧的预留位置。2.0系统中设计Pu帧组的目的在于提高用户接入和链路的速度。</p>
-<p>38us长Pd帧/Pu帧是“以一敌十的多面手”，可以用来完成非常多的功能：</p>
-<ul>
-<li>新用户接纳</li>
-<li>老用户链路维护</li>
-<li>测距</li>
-<li>物理层载波频率同步</li>
-<li>物理层采样时钟频率同步</li>
-<li>物理层功率控制</li>
-<li>物理层信道估计</li>
-</ul>
-<p>在其他有线或无线系统中，以上每个功能恐怕都需要专门的物理层帧或训练字段来辅助完成。</p>
-</li>
-<li><p>Cd帧</p>
-<p>下行控制帧（Cd帧）仅包括3个OFDM符号，在MAP周期内的位置固定，位于MAP周期的第5~7个OFDM符号。Cd帧的作用有三个：承载MAC层的信道规划信息；承载上一MAP周期内的上行数据帧的ACK/NACK信息；辅助物理层完成精确的时间补偿。</p>
-<ul>
-<li><p>信道资源规划</p>
-<p>Cd帧包括8个独立的MAC层信道规划帧，每个信道规划帧对应16MHz的信道规划结果，每个信道规划帧采用独创的二进制位图编码方式简洁高效地指明了下一个MAP周期中时频资源在多个用户以及上下行之间如何分配。</p>
-</li>
-<li><p>上行ACK/NACK信息</p>
-<p>HINOC2.0 MAC层增加可选ARQ的功能，用以提高系统传输可靠性。考虑到了ACK/NACK的解调时延和重传帧的处理时延问题，所以Cd帧要位于MAP周期的第5~7个OFDM时隙而非第1~3个OFDM时隙。</p>
-</li>
+<li>大写字母，标量或向量，通常代表某个变量(输入变量或者输出变量)：<ul>
+<li>$X$ - 输入变量; 当X为向量时，$X_j$是$X$的第$j$个分量; </li>
+<li>$Y$ - 输出类型为定量变量(Quatitative Output variable);</li>
+<li>$G$ - 输出类型为定性变量(Qualitative Output variable)</li>
 </ul>
 </li>
-<li><p>Ru帧</p>
-<p>上行报告帧（Ru帧）仅包括OFDM负载段，OFDM符号数至少为1，最多为7，位于MAP周期的倒数第5~11个OFDM符号。Ru帧的作用同样有三个：承载用户的信道资源请求信息；承载本MAP周期内下行数据帧的ACK/NACK信息；辅助物理层完成检测用户在线状态。</p>
+<li>小写字母，标量或向量，表示某次的观测变量，例如$x_i$为变量$X$的第$i$次观测变量；</li>
+<li>黑体大写字母，矩阵，例如$\mathbf{X}$为$N \times p$矩阵，表示$N$次观测变量$x_i$。</li>
+</ul>
+<p>通常，向量不用黑体表示，除非该向量具有$N$项，例如$\mathbf{x}_j$代表$X_j$的$N$观测值，而$x_j$代表$X$的一次观测值。另外常用的变量还有：</p>
 <ul>
-<li><p>信道资源请求</p>
-<p>HINOC2.0采用了OFDMA的信道资源请求方式，即每个在线用户采用20个子载波就可以完成信道资源请求。极限情况下，Ru帧使用一个OFDM符号就可以完成所有64用户的资源请求。</p>
-</li>
+<li>$K$ - 因变量的分量个数；</li>
+<li>$p$ - 自变量或预测变量的分量个数；</li>
+<li>$N$ - 观测次数。</li>
 </ul>
-</li>
-<li><p>Dd帧/Du帧</p>
-<p>MAP周期除去Cd帧、Ru帧以及1个OFDM时长的上下行收发切换间隔（IFG），其他OFDM符号均可以分配给上下行的数据帧（Dd帧/Du帧）。</p>
-<p>HINOC采用TDD的方式，上下行的传输带宽比可以灵活配置。同时基于TDMA/OFDMA的用户多址接入方式，HINOC可以实现高效灵活的带宽分配策略。</p>
-</li>
-</ul>
-<h1 id="HINOC2-0传输速率与效率"><a href="#HINOC2-0传输速率与效率" class="headerlink" title="HINOC2.0传输速率与效率"></a>HINOC2.0传输速率与效率</h1><p>根据以上物理层帧结构的介绍，本节对系统传输速率与效率进行推导。</p>
-<p>MAC层传输速率(Mbps) = 26<em>(146-3-1-1)</em>1920<em> M</em>0.9083*0.9771/ 65536</p>
-<p>其中，MAC层传输速率为去除MAC层和PHY层开销后的传输速率；分母为Pd周期长度65536，单位为us；分子为每个Pd周期内可以传送的MAC层有效数据比特个数。分子中每项数字的具体含义为：</p>
+<h1 id="两种简单的监督学习算法"><a href="#两种简单的监督学习算法" class="headerlink" title="两种简单的监督学习算法"></a>两种简单的监督学习算法</h1><h2 id="范例：二维分类问题"><a href="#范例：二维分类问题" class="headerlink" title="范例：二维分类问题"></a>范例：二维分类问题</h2><p>以二维平面的分类问题为例，引入两种简单的监督学习算法：最小二乘算法(Least Squares,LS)以及最邻近算法(Nearest-Neighbor Method)。下图参照<code>ESLII Figure2.1</code>的场景2进行随机生成，即二维平面的样点被分为<code>blue</code>(数值0)和<code>orange</code>(数值1)两类，且每一类各由10个服从高斯分布的变量构成。</p>
+<p><img src="/2017/12/ESLII-ch2-1 - 副本/example.png" alt="二维分类范例"></p>
+<p>该图的<code>Python</code>实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># IPython3 </span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pylab <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gen_data</span><span class="params">(mean, cov, n_gauss, n_observ)</span>:</span></span><br><span class="line">    mean_gauss = np.random.multivariate_normal(mean,cov,n_gauss)</span><br><span class="line">    <span class="comment">#print(mean_gauss)</span></span><br><span class="line">    data = mean_gauss[np.random.randint(<span class="number">0</span>,n_gauss,n_observ)] + np.random.multivariate_normal([<span class="number">0</span>,<span class="number">0</span>],cov/<span class="number">5</span>,n_observ)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># training samples</span></span><br><span class="line">data_bule = gen_data([<span class="number">1</span>,<span class="number">0</span>],np.eye(<span class="number">2</span>)/<span class="number">1</span>,<span class="number">10</span>,<span class="number">100</span>)</span><br><span class="line">data_orange = gen_data([<span class="number">0</span>,<span class="number">1</span>],np.eye(<span class="number">2</span>)/<span class="number">1</span>,<span class="number">10</span>,<span class="number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># set the figure parameters</span></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>,<span class="number">8</span>),dpi=<span class="number">120</span>) <span class="comment"># dpi 300 for printing; 72 or 120 for web display</span></span><br><span class="line">plt.tick_params(left=<span class="string">'off'</span>,bottom=<span class="string">'off'</span>,labelleft=<span class="string">'off'</span>,labelbottom=<span class="string">'off'</span>)</span><br><span class="line">plt.title(<span class="string">"A Classification Example in Two Dimensions"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the training samples</span></span><br><span class="line">plt.scatter(data_bule[:,<span class="number">0</span>],data_bule[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'dodgerblue'</span>,color=<span class="string">'none'</span>)</span><br><span class="line">plt.scatter(data_orange[:,<span class="number">0</span>],data_orange[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'orange'</span>,color=<span class="string">'none'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># square the figure</span></span><br><span class="line">plt.axis(<span class="string">'square'</span>)</span><br><span class="line"></span><br><span class="line">plt.show</span><br></pre></td></tr></table></figure>
+<h2 id="线性模型以及最小二乘"><a href="#线性模型以及最小二乘" class="headerlink" title="线性模型以及最小二乘"></a>线性模型以及最小二乘</h2><p>第一类分类方式是根据线性模型采用最小二乘算法进行分类。该方法的模型、评价准则以及算法如下：</p>
+<p><strong>模型</strong> (向量表示法):</p>
+<script type="math/tex; mode=display">\hat{Y} = X^T\beta</script><p>其中，$X^T = (1, X_1, X_2,…,X_p)$。</p>
+<blockquote>
+<p>在 $(p+1)$-输入输出空间中, $(X,\hat{Y})$ 代表一个<strong>超平面</strong>(hyperplane)；如果$X$中包括常量$X_0 = 1$，则该超平面包含原点，属于一个<strong>子空间</strong>；如果$X$中不包括常量$X_0 = 1$，则该超平面输入<strong>仿射集</strong>(affine set)。</p>
+</blockquote>
+<p><strong>准则</strong>(最小残差平方和):</p>
+<p>$ \text{RSS}(\beta) = \sum_{i=1}^N(y_i-x_i^T\beta)^2$</p>
+<p>可用矩阵形似表示为：</p>
+<script type="math/tex; mode=display">\text{RSS}(\beta) = (\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)</script><p><strong>算法</strong>:</p>
+<script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><p>然后，根据该模型对第$i$对测试数据$x_i$的输出为： </p>
+<script type="math/tex; mode=display">\hat{y}_i = \hat{y}(x_i) = x_i^T\hat{\beta}</script><p>最终，$x_i$的分类结果为：如果$\hat{y}&gt;0.5$，$ \hat{G}$=<code>orange</code>，否则$ \hat{G}$ = <code>blue</code>。</p>
+<p>下图为采用上述方法进行分类的结果。其中，图中的标记为‘o’为点输入的训练数据，其颜色为所属类别，标记为’.’为输入的测试数据，其颜色代表所属类别，黑色实线为判决边界的一段。</p>
+<p><img src="/2017/12/ESLII-ch2-1 - 副本/ls-regression.png" alt="LS分类"></p>
+<p>最小二乘算法以及上图的<code>Python</code>代码(上个代码片段的后续)如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## LEAST SQUARES##</span></span><br><span class="line">X = np.vstack((data_bule, data_orange))</span><br><span class="line">X = np.hstack((np.ones((<span class="number">200</span>,<span class="number">1</span>)),X))</span><br><span class="line">Y = np.ones((<span class="number">100</span>,<span class="number">1</span>))*np.arange(<span class="number">2</span>)</span><br><span class="line">Y = np.reshape(Y,(<span class="number">200</span>,<span class="number">1</span>),order=<span class="string">'F'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># parameters of least squares algorithm</span></span><br><span class="line">beta = np.dot(np.dot(np.linalg.inv(np.dot(X.transpose(),X)),X.transpose()),Y)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># test samples</span></span><br><span class="line">v = np.linspace(X.min(),X.max(),<span class="number">50</span>)</span><br><span class="line">xn1,xn2 = np.meshgrid(v,v)</span><br><span class="line"></span><br><span class="line"><span class="comment"># output of new test samples</span></span><br><span class="line">yn = (beta[<span class="number">0</span>]+beta[<span class="number">1</span>]*xn1+beta[<span class="number">2</span>]*xn2)&gt;<span class="number">0.5</span></span><br><span class="line"><span class="comment"># decision boundary &#123;x: x^T*beta = 0.5&#125;</span></span><br><span class="line">x2 = X[:,<span class="number">2</span>].reshape((<span class="number">200</span>,<span class="number">1</span>))+(<span class="number">0.5</span>-np.dot(X,beta))/beta[<span class="number">-1</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># set the figure parameters</span></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>,<span class="number">8</span>),dpi=<span class="number">120</span>) <span class="comment"># dpi 300 for printing; 72 or 120 for web display</span></span><br><span class="line">plt.tick_params(left=<span class="string">'off'</span>,bottom=<span class="string">'off'</span>,labelleft=<span class="string">'off'</span>,labelbottom=<span class="string">'off'</span>)</span><br><span class="line">plt.title(<span class="string">"Linear Regression of 0/1 Response"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the training samples</span></span><br><span class="line">plt.scatter(data_bule[:,<span class="number">0</span>],data_bule[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'dodgerblue'</span>,color=<span class="string">'none'</span>)</span><br><span class="line">plt.scatter(data_orange[:,<span class="number">0</span>],data_orange[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'orange'</span>,color=<span class="string">'none'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the test samples</span></span><br><span class="line">plt.plot(xn1[yn==<span class="keyword">True</span>],xn2[yn==<span class="keyword">True</span>],linestyle=<span class="string">'none'</span>,marker=<span class="string">'.'</span>,markersize=<span class="number">1</span>,color=<span class="string">'orange'</span>)</span><br><span class="line">plt.plot(xn1[yn==<span class="keyword">False</span>],xn2[yn==<span class="keyword">False</span>],linestyle=<span class="string">'none'</span>,marker=<span class="string">'.'</span>,markersize=<span class="number">1</span>,color=<span class="string">'dodgerblue'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># square the figure</span></span><br><span class="line">plt.xlim([X.min(),X.max()])</span><br><span class="line">plt.ylim([X.min(),X.max()])</span><br><span class="line">plt.axis(<span class="string">'square'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the decision boundary</span></span><br><span class="line">plt.plot(X[:,<span class="number">1</span>],x2,color=<span class="string">'black'</span>)</span><br><span class="line"></span><br><span class="line">plt.show</span><br></pre></td></tr></table></figure>
+<h2 id="最邻近算法"><a href="#最邻近算法" class="headerlink" title="最邻近算法"></a>最邻近算法</h2><p>最邻近算法利用训练集合$\mathcal{T}$中距离输入变量$x$最近的$k$的观测值去计算$\hat{Y}$：</p>
+<script type="math/tex; mode=display">\hat{Y}(x)=\frac{1}{k}\sum_{x_i\in N_k(x)}y_i</script><p>其中，$N_k(x)$是$x$在训练集合中的最邻近集合；k为最邻近算法的参数，代表临近集合中的样本个数，即。最后，若$\hat{Y}$&gt;0.5，则判决为<code>orange</code>，否则为<code>blue</code>。下图为采用最邻近算法的分类结果，其中，图中的标记为’o’为点输入的训练数据，其颜色为所属类别，标记为’.’为输入的测试数据，其颜色代表所属类别。</p>
+<p><img src="/2017/12/ESLII-ch2-1 - 副本/15-knn.png" alt="knn分类"></p>
+<p>最邻近算法以及上图的<code>Python</code>代码(上个代码片段的后续)如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">knn_classify</span><span class="params">(test_sample, training_sample, training_sample_resp, k)</span>:</span></span><br><span class="line">    <span class="comment"># test_sample: the samples for test</span></span><br><span class="line">    <span class="comment"># training_sample: the samples used for training </span></span><br><span class="line">    <span class="comment"># training_sample_resp: the respone of the training samples</span></span><br><span class="line">    <span class="comment"># k: parameters of KNN method</span></span><br><span class="line">    </span><br><span class="line">    n = test_sample.shape[<span class="number">0</span>]</span><br><span class="line">    p = test_sample.shape[<span class="number">1</span>]</span><br><span class="line">    <span class="comment"># calc the neighbors</span></span><br><span class="line">    distance_array = np.linalg.norm(test_sample.reshape((n,<span class="number">1</span>,p))-training_sample,ord = <span class="number">2</span>, axis = <span class="number">2</span>) <span class="comment"># broadcasting,and calculate the norm</span></span><br><span class="line">    index_neighbor = np.argsort(distance_array)[:,<span class="number">0</span>:k]</span><br><span class="line">    neighbor = training_sample_resp[index_neighbor]</span><br><span class="line">    <span class="comment"># apply KNN fit</span></span><br><span class="line">    test_sample_resp = np.sum(neighbor,axis=<span class="number">-2</span>)/k</span><br><span class="line">    <span class="comment"># decision </span></span><br><span class="line">    resp_set = np.unique(training_sample_resp)</span><br><span class="line">    l = resp_set.size</span><br><span class="line">    test_sample_resp = resp_set[np.argsort(np.abs(test_sample_resp-resp_set.reshape((l,))))[:,<span class="number">0</span>]] </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> test_sample_resp</span><br><span class="line"></span><br><span class="line"><span class="comment">##</span></span><br><span class="line">test_sample = np.hstack((xn1.reshape((xn1.size,<span class="number">1</span>)),xn2.reshape(xn2.size,<span class="number">1</span>)))</span><br><span class="line">training_sample = np.vstack((data_bule,data_orange))</span><br><span class="line">training_sample_resp = np.ones((<span class="number">100</span>,<span class="number">1</span>))*np.arange(<span class="number">2</span>)</span><br><span class="line">training_sample_resp = np.reshape(training_sample_resp,(<span class="number">200</span>,<span class="number">1</span>),order=<span class="string">'F'</span>)</span><br><span class="line"></span><br><span class="line">test_sample_resp = knn_classify(test_sample, training_sample, training_sample_resp, <span class="number">15</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># set the figure parameters</span></span><br><span class="line">plt.figure(figsize=(<span class="number">8</span>,<span class="number">8</span>),dpi=<span class="number">120</span>) <span class="comment"># dpi 300 for printing; 72 or 120 for web display</span></span><br><span class="line">plt.tick_params(left=<span class="string">'off'</span>,bottom=<span class="string">'off'</span>,labelleft=<span class="string">'off'</span>,labelbottom=<span class="string">'off'</span>)</span><br><span class="line">plt.title(<span class="string">"15-Nearest Nerghbor Classifier"</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the training samples</span></span><br><span class="line">plt.scatter(data_bule[:,<span class="number">0</span>],data_bule[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'dodgerblue'</span>,color=<span class="string">'none'</span>)</span><br><span class="line">plt.scatter(data_orange[:,<span class="number">0</span>],data_orange[:,<span class="number">1</span>],marker=<span class="string">'o'</span>,edgecolors=<span class="string">'orange'</span>,color=<span class="string">'none'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the test samples</span></span><br><span class="line">plt.plot(test_sample[test_sample_resp==<span class="number">1</span>,<span class="number">0</span>],test_sample[test_sample_resp==<span class="number">1</span>,<span class="number">1</span>],linestyle=<span class="string">'none'</span>,marker=<span class="string">'.'</span>,markersize=<span class="number">1</span>,color=<span class="string">'orange'</span>)</span><br><span class="line">plt.plot(test_sample[test_sample_resp==<span class="number">0</span>,<span class="number">0</span>],test_sample[test_sample_resp==<span class="number">0</span>,<span class="number">1</span>],linestyle=<span class="string">'none'</span>,marker=<span class="string">'.'</span>,markersize=<span class="number">1</span>,color=<span class="string">'dodgerblue'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># square the figure</span></span><br><span class="line">plt.xlim([X.min(),X.max()])</span><br><span class="line">plt.ylim([X.min(),X.max()])</span><br><span class="line">plt.axis(<span class="string">'square'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># plot the decision boundary</span></span><br><span class="line"></span><br><span class="line">plt.show</span><br></pre></td></tr></table></figure></p>
+<p>注：</p>
 <ul>
-<li>26：每个Pd周期内的MAP周期个数；</li>
-<li>(146-3-2-1)：每个MAP周期内的可用于数据帧OFDM符号个数，即146个符号扣除3个Cd帧OFDM符号、2个上下行间隔、1个Ru帧OFDM符号；</li>
-<li>1920：每个数据帧OFDM符号中的数据子载波个数；</li>
-<li>M：每个子载波可以携带的比特个数，即QAM调制阶数；</li>
-<li>0.9083：采用BCH (1744, 1920)的编码码率；</li>
-<li>0.9771：MAC层数据帧开销，即在MAC层每个1744bit的数据帧包括16bit的CRC、24bit的数据帧帧头开销 (后续文章会详细介绍MAC层的组帧过程)。</li>
+<li>为了代码的高效简洁，采用了<code>Python</code>的Broadcasting机制。关于Broadcasting的更多详细信息点击参考<a href="http://blog.csdn.net/hongxingabc/article/details/53149655" target="_blank" rel="noopener">这里</a>；</li>
+<li>博主目前还不会绘制<code>ESLII Figure2.2</code>中KNN算法的判决边界，但是通过观察上图中’.’表示的区域可以大致勾勒出KNN算法的判决边界为一条或者多条的曲线；</li>
+<li>当训练样本增多时，本篇文章里介绍的LS算法和KNN算法的复杂度将急剧的增加；在后续的文章中，我们将采用QR分解来解决LS算法的矩阵求逆过程；采用KD树的方法来解决KNN算法的搜索过程。</li>
 </ul>
-<p>上式简化，可得:</p>
-<p>MAC层传输速率(Mbps) = 94.64*M</p>
-<p>即MAC层传输速率与QAM调制阶数M成正比。在HINOC系统中，最高QAM调制阶数为4096QAM，即M=12，此时MAC层传输速率为：94.64*12 Mbps= 1136Mbps，超过了1 Gpbs。</p>
-<p>HINOC2.0系统采用子载波分组的自适应调制，其子载波平均调制阶数M在(0,12]之间。下图给出了不同调制阶数下的MAC层传输速率。</p>
-<p><img src="/2017/12/hinoc2-0-intro-4/mac-rate.jpg" alt="MAC层传输速率"></p>
-<p>传输速率与系统带宽相关，带宽越大，上式中每个Pd帧周期内传输的比特数目越多。通常，我们会引入传输效率的概念对传输带宽进行归一化，即计算在每Hz的传输频带上的有效传输速率，即：</p>
-<p>HINOC2.0传输效率(bit/s/Hz) = MAC传输速率 / 128MHz</p>
-<p>当HINOC采用4096QAM时，系统效率高达8.873 bit/s/Hz；当采用1024QAM时，系统效率也有7.394 bit/s/Hz。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>HINOC2.0物理层设计了非常高效的帧结构。为了保证数据帧的传输效率，HINOC2.0最大限度地降低了其他信令帧、控制帧的开销。每种信令帧、控制帧除了完成MAC层的信令交互与承载之外，还承担了物理层数字接收系统中的多种辅助作用。HINOC2.0高达1136Mbps的MAC层传输速率以及8.873 bit/s/Hz的传输效率优于其他同轴接入技术。</p>
-<p> 在后续MAC层的文章介绍中，我们还将进一步看到在多用户同时在线传输的情况下，由于HINOC采用了TDMA/OFDMA的多址技术，其系统速率的下降是非常小的：64个用户同时占线时的传输速率相比1个用户时的传输效率仅降低40Mbps左右。</p>
+<h2 id="从最小二乘到最邻近算法"><a href="#从最小二乘到最邻近算法" class="headerlink" title="从最小二乘到最邻近算法"></a>从最小二乘到最邻近算法</h2><ul>
+<li>最小二乘算法假定输入输出符合线性模型，进而判决边界光滑；最邻近算法不对输入输出做任何假设，进而其判决边界受到训练样本的影响；</li>
+<li>最小二乘算法相比最邻近算法具有低方差高偏置(low variance and high bias: stable)的特点。</li>
+</ul>
+<h1 id="统计决策理论"><a href="#统计决策理论" class="headerlink" title="统计决策理论"></a>统计决策理论</h1><p>统计决策理论(statistical decision theory)使用训练样本信息以及样本信息之外的其他信息(损失函数以及先验信息)来形成决策过程。<br>如果选择损失函数(loss function)为$L(Y,f(X))=(Y-f(X))^2$，则很自然地得到选择$f$的准则为最小化均方预测误差(expected squared predication error, EPE)：</p>
 
       
     </div>
@@ -563,7 +499,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://steelblue.tech/2017/12/hinoc2-0-intro-4/" title="HINOC2.0标准介绍(4):物理层帧结构与传输效率">https://steelblue.tech/2017/12/hinoc2-0-intro-4/</a>
+    <a href="https://steelblue.tech/2017/12/ESLII-ch2-1 - 副本/" title="ESLII-2-1 监督学习概述">https://steelblue.tech/2017/12/ESLII-ch2-1 - 副本/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -578,11 +514,13 @@
       
         <div class="post-tags">
           
-            <a href="/tags/HINOC/" rel="tag"># HINOC</a>
+            <a href="/tags/ESLLI/" rel="tag"># ESLLI</a>
           
-            <a href="/tags/物理层/" rel="tag"># 物理层</a>
+            <a href="/tags/最小二乘/" rel="tag"># 最小二乘</a>
           
-            <a href="/tags/协议分析/" rel="tag"># 协议分析</a>
+            <a href="/tags/k-最邻近/" rel="tag"># k-最邻近</a>
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
           
         </div>
       
@@ -610,8 +548,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/hinoc2-0-intro-3/" rel="next" title="HINOC2.0标准介绍(3):星座映射与OFDM调制">
-                <i class="fa fa-chevron-left"></i> HINOC2.0标准介绍(3):星座映射与OFDM调制
+              <a href="/2017/12/oam-overview/" rel="next" title="以太网OAM机制概述">
+                <i class="fa fa-chevron-left"></i> 以太网OAM机制概述
               </a>
             
           </div>
@@ -620,8 +558,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/12/oam-overview/" rel="prev" title="以太网OAM机制概述">
-                以太网OAM机制概述 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/12/ESLII-ch2-1/" rel="prev" title="ESLII-2-1 监督学习概述">
+                ESLII-2-1 监督学习概述 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -765,7 +703,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时序关系"><span class="nav-number">2.</span> <span class="nav-text">时序关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HINOC2-0传输速率与效率"><span class="nav-number">3.</span> <span class="nav-text">HINOC2.0传输速率与效率</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念、术语与标记"><span class="nav-number">1.</span> <span class="nav-text">基本概念、术语与标记</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#两种简单的监督学习算法"><span class="nav-number">2.</span> <span class="nav-text">两种简单的监督学习算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#范例：二维分类问题"><span class="nav-number">2.1.</span> <span class="nav-text">范例：二维分类问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#线性模型以及最小二乘"><span class="nav-number">2.2.</span> <span class="nav-text">线性模型以及最小二乘</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最邻近算法"><span class="nav-number">2.3.</span> <span class="nav-text">最邻近算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从最小二乘到最邻近算法"><span class="nav-number">2.4.</span> <span class="nav-text">从最小二乘到最邻近算法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#统计决策理论"><span class="nav-number">3.</span> <span class="nav-text">统计决策理论</span></a></li></ol></div>
             
 
           </div>

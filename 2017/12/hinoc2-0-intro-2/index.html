@@ -429,6 +429,7 @@
 <h1 id="HINOC2-0物理层发送单元模块"><a href="#HINOC2-0物理层发送单元模块" class="headerlink" title="HINOC2.0物理层发送单元模块"></a>HINOC2.0物理层发送单元模块</h1><p>HINOC2.0物理层发送单元的功能模块包括扰码、前向纠错编码、星座映射、星座扰码、正交频分复用（OFDM）调制及插入循环前缀、组帧以及基带到射频变换。功能模块的先后顺序如图1所示，其中扰码、前向纠错编码、星座扰码及组帧需要根据不同的数据流类型选择关闭或打开。</p>
 <p><img src="/2017/12/hinoc2-0-intro-2/hinoc_transmiter.jpg" alt="物理层发送单元"></p>
 <h1 id="HINOC2-0信道编码的选择"><a href="#HINOC2-0信道编码的选择" class="headerlink" title="HINOC2.0信道编码的选择"></a>HINOC2.0信道编码的选择</h1><p>本文简要介绍HINOC的信道编码（即前向纠错编码）的选择。HINOC2.0的信道编码沿用了HINOC1.0中的BCH，同时增加了对LDPC编码的可选支持。下表给出了HINOC2.0使用的信道编码方式。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -465,6 +466,7 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>信道编码需要匹配通信系统的特征，即信道编码的选择需要综合考虑系统的使用场景、业务类型以及信道环境。每一种信道编码方式均可以通过以下4个方面进行描述。</p>
 <h2 id="码率"><a href="#码率" class="headerlink" title="码率"></a>码率</h2><p>码率指信道编码的编码效率。码率直接影响通信系统的频谱效率以及信道编码的纠错能力。由于信道编码通常采用引入冗余信息的方式纠正误码，信道编码的码率对于物理层传输速率和效率具有重要的影响。与无线通信系统相比，同轴电缆信道的衰落特性及环境噪声均远远优于无线传输环境。在未进行信道编码的情况下，同轴电缆通信系统已具有相对较低的误码率，有利于其采用高码率的信道编码。因此，传输速率需求和传输环境决定了同轴电缆通信系统应当采用具有较高码率的信道编码。</p>
 <h2 id="码长"><a href="#码长" class="headerlink" title="码长"></a>码长</h2><p>码长是指分组码的编码块长度。码长的选择需要考虑数据业务类型以及实现的复杂度。如果信道编码的码字较长，其编码器的实现复杂度越高，且译码时延则会越大，从而增加系统的信息传输时延。此外，在互联网中，MAC层承载的数据帧长度从64字节到1518字节变化不等，且业务类型通常为数据突发模式。在数据帧有效信息长度小于码字长度时，需要通过填充无效字符的方式补足长度，造成传输效率的下降。信道编码的码字越长，则由此引起的传输效率下降越严重。根据前述两点，短码长的信道编码更加适用于HINOC通信系统。</p>
@@ -651,7 +653,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1392,7 +1394,7 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
   
 
 
