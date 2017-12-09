@@ -70,7 +70,6 @@
 &=\mathbf{E}_X\mathbf{E}_{Y|X}([Y-f(X)]^2|X)
 \end{split}</script><p>根据上述准则的$f(x)$为:</p>
 <script type="math/tex; mode=display">\begin{split}f(x)
-&=\argmin_c \mathbf{E}_{Y|X}([Y-c]^2|X)}\\\\
 &=\mathbf{E}(Y|X=x)
 \end{split}</script><p>上述方程又被称之为<strong>回归方程(regression function)</strong>，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
 <ul>
@@ -87,11 +86,8 @@
 </li>
 </ul>
 <p>当统计决策的损失函数由二阶的均方误差替换为一阶的$\mathbf{E}|Y-f(x)|$，则最小化该损失函数的$f(x)$为：</p>
-<script type="math/tex; mode=display">f(x)=\text{median}(Y|X=x)$$。
-
-当输出变量为定性变量$G\in \mathcal{G}$时，损失函数通常定义为$K\times K$的矩阵$L$，其中$K=\text{card}(G)$。$L(k,l)$为将$\mathcal{G}_k$的变量分类为$\mathcal{G}_l$的代价。此时最小化损失函数的决策函数$\hat{G}(x)$为：
-
-$$\hat{G}(x)=\mathcal{G}_k \text{, if  Pr}(\mathcal{G}_k|X=x)=\max_{g\in \mathcal{G}}\text{Pr}(g|X=x)</script><p>以上方程又被称之为<strong>贝叶斯分类器(Bayes classifier)</strong>。</p>
+<script type="math/tex; mode=display">f(x)=\text{median}(Y|X=x)</script><p>当输出变量为定性变量$G\in \mathcal{G}$时，损失函数通常定义为$K\times K$的矩阵$L$，其中$K=\text{card}(G)$。$L(k,l)$为将$\mathcal{G}_k$的变量分类为$\mathcal{G}_l$的代价。此时最小化损失函数的决策函数$\hat{G}(x)$为：</p>
+<script type="math/tex; mode=display">\hat{G}(x)=\mathcal{G}_k \text{, if  Pr}(\mathcal{G}_k|X=x)=\max_{g\in \mathcal{G}}\text{Pr}(g|X=x)</script><p>以上方程又被称之为<strong>贝叶斯分类器(Bayes classifier)</strong>。</p>
 ]]></content>
       
         <categories>
