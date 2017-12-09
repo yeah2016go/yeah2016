@@ -432,7 +432,7 @@
 <li>大写字母，标量或向量，通常代表某个变量(输入变量或者输出变量)：<ul>
 <li>$X$ - 输入变量; 当X为向量时，$X_j$是$X$的第$j$个分量; </li>
 <li>$Y$ - 输出类型为定量变量(Quatitative Output variable);</li>
-<li>$G$ - 输出类型为定性变量(Qualitative Output variable)</li>
+<li>$G$ - 输出类型为定性变量(Qualitative Output variable)。</li>
 </ul>
 </li>
 <li>小写字母，标量或向量，表示某次的观测变量，例如$x_i$为变量$X$的第$i$次观测变量；</li>
@@ -440,7 +440,7 @@
 </ul>
 <p>通常，向量不用黑体表示，除非该向量具有$N$项，例如$\mathbf{x}_j$代表$X_j$的$N$观测值，而$x_j$代表$X$的一次观测值。另外常用的变量还有：</p>
 <ul>
-<li>$K$ - 因变量的分量个数；</li>
+<li>$K$ - 因变量的取值集合的元素，即$K=\text{card}(G)$；</li>
 <li>$p$ - 自变量或预测变量的分量个数；</li>
 <li>$N$ - 观测次数。</li>
 </ul>
@@ -487,9 +487,9 @@
 &=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)
 \end{split}</script><p>根据上述准则的$f(x)$为:</p>
 <script type="math/tex; mode=display">\begin{split}f(x)
-&=\text{argmin_c\mathbf{E}_{Y|X}((Y-C)^2|X)}\\\\
+&=\text{argmin}_c\mathbf{E}_{Y|X}((Y-C)^2|X)}\\\\
 &=\mathbf{E}(Y|X=x)
-\end{split}</script><p>上述方程又被称之为回归方程(regression function)，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
+\end{split}</script><p>上述方程又被称之为<strong>回归方程(regression function)</strong>，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
 <ul>
 <li>最小二乘和最邻近算法本质上是用训练样本去估算该条件期望：<ul>
 <li>线性模型$f(x)\approx x^T\beta$的统计决策解为$\beta=[\mathbf{E}(XX^T)]^{-1}\mathbf{E}(XY)$ ；</li>
@@ -503,7 +503,9 @@
 </ul>
 </li>
 </ul>
-<p>当统计决策的损失函数由二阶的均方误差替换为一阶的$\mathbf{E}|Y-f(x)|$，则最小化该损失函数的$f(x)$为$f(x)=\text{median}(Y|X=x)$。</p>
+<p>当统计决策的损失函数由二阶的均方误差替换为一阶的$\mathbf{E}|Y-f(x)|$，则最小化该损失函数的$f(x)$为：￥<script type="math/tex">f(x)=\text{median}(Y|X=x)</script>。</p>
+<p>当输出变量为定性变量$G\in \mathcal{G}$时，损失函数通常定义为$K\times K$的矩阵$L$，其中$K=\text{card}(G)$。$L(k,l)$为将$\mathcal{G}_k$的变量分类为$\mathcal{G}_l$的代价。此时最小化损失函数的决策函数$\hat{G}(x)$为：</p>
+<script type="math/tex; mode=display">\hat{G}(x)=\mathcal{G}_k \text{, if  Pr}(\mathcal{G}_k|X=x)=\max_{g\in \mathcal{G}}\text{Pr}(g|X=x)</script><p>以上方程又被称之为<strong>贝叶斯分类器(Bayes classifier)</strong>。</p>
 
       
     </div>
