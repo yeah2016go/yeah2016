@@ -70,7 +70,7 @@
 &=\mathbf{E}_X\mathbf{E}_{Y|X}([Y-f(X)]^2|X)
 \end{split}</script><p>根据上述准则的$f(x)$为:</p>
 <script type="math/tex; mode=display">\begin{split}f(x)
-&=\text{argmin}_c \mathbf{E}_{Y|X}([Y-c]^2|X)}\\\\
+&=\argmin_c \mathbf{E}_{Y|X}([Y-c]^2|X)}\\\\
 &=\mathbf{E}(Y|X=x)
 \end{split}</script><p>上述方程又被称之为<strong>回归方程(regression function)</strong>，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
 <ul>
