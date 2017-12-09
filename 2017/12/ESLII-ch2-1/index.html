@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/example.png">
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/ls-regression.png">
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/15-knn.png">
-<meta property="og:updated_time" content="2017-12-09T08:39:45.560Z">
+<meta property="og:updated_time" content="2017-12-09T10:06:39.438Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap2-1 监督学习概述">
 <meta name="twitter:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
@@ -346,7 +346,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-09T16:39:45+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-09T18:06:39+08:00">
                 2017-12-09
               </time>
             
@@ -479,12 +479,32 @@
 <li>最小二乘算法假定输入输出符合线性模型，进而判决边界光滑；最邻近算法不对输入输出做任何假设，进而其判决边界受到训练样本的影响；</li>
 <li>最小二乘算法相比最邻近算法具有低方差高偏置(low variance and high bias: stable)的特点。</li>
 </ul>
-<h1 id="统计决策理论"><a href="#统计决策理论" class="headerlink" title="统计决策理论"></a>统计决策理论</h1><p>统计决策理论(statistical decision theory)使用训练样本信息以及样本信息之外的其他信息(损失函数以及先验信息)来形成决策过程。<br>如果选择损失函数(loss function)为$L(Y,f(X))=(Y-f(X))^2$，则很自然地得到选择$f$的准则为最小化均方预测误差(expected squared predication error, EPE)：</p>
-<script type="math/tex; mode=display">\text{EPE}(f) =\int(y-f(x))^2\text{Pr}(dx,dy)=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)</script><script type="math/tex; mode=display">\begin{split}\text{EPE}(f) 
+<h1 id="统计决策理论"><a href="#统计决策理论" class="headerlink" title="统计决策理论"></a>统计决策理论</h1><p>统计决策理论(statistical decision theory)使用训练样本信息以及样本信息之外的其他信息(损失函数以及先验信息)来形成决策过程。</p>
+<p>下面用统计决策理论的角度去分析最小二乘和最邻近算法。这两个算法均选择损失函数(loss function)为$L(Y,f(X))=(Y-f(X))^2$，则选择模型$f$的准则为最小化均方预测误差(expected squared predication error, EPE)：</p>
+<script type="math/tex; mode=display">\begin{split}\text{EPE}(f) 
 &= \mathbf{E}(Y-f(X))^2 \\\\
 &=\int[y-f(x)]^2\text{Pr}(dx,dy)\\\\
 &=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)
-\end{split}</script>
+\end{split}</script><p>根据上述准则的$f(x)$为:</p>
+<script type="math/tex; mode=display">\begin{split}f(x)
+&=\text{argmin_c\mathbf{E}_{Y|X}((Y-C)^2|X)}\\\\
+&=\mathbf{E}(Y|X=x)
+\end{split}</script><p>上述方程又被称之为回归方程(regression function)，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
+<ul>
+<li>最小二乘和最邻近算法本质上是用训练样本去估算该条件期望：<ul>
+<li>线性模型$f(x)\approx x^T\beta$的统计决策解为$\beta=[\mathbf{E}(XX^T)]^{-1}\mathbf{E}(XY)$ ；</li>
+<li>最小二乘算法将求期望(自相关和互相关)的运算用全部样本求平均的方法替代；</li>
+<li>最邻近算法同样将期望松弛为样本数据的平均，且将$X=x$的条件松弛为$x$附近的邻域。</li>
+</ul>
+</li>
+<li>虽然近似方法相似，但两者选择模型不同：<ul>
+<li>最小二乘算法假定$f(x)$是线性模型；</li>
+<li>最邻近算法假定$f(x)$在$X=x$足够小的邻域内保持常数。</li>
+</ul>
+</li>
+</ul>
+<p>当统计决策的损失函数由二阶的均方误差替换为一阶的$\mathbf{E}|Y-f(x)|$，则最小化该损失函数的$f(x)$为$f(x)=\text{median}(Y|X=x)$。</p>
+
       
     </div>
     
@@ -553,8 +573,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/12/ESLII-ch2-1 - 副本/" rel="next" title="ESLII-2-1 监督学习概述">
-                <i class="fa fa-chevron-left"></i> ESLII-2-1 监督学习概述
+              <a href="/2017/12/oam-overview/" rel="next" title="以太网OAM机制概述">
+                <i class="fa fa-chevron-left"></i> 以太网OAM机制概述
               </a>
             
           </div>
@@ -562,6 +582,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/ESLII-ch2-1 - 副本/" rel="prev" title="ESLII-2-1 监督学习概述">
+                ESLII-2-1 监督学习概述 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
