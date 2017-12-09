@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title><![CDATA[ESLII-2-1 监督学习概述]]></title>
+      <title><![CDATA[ESLII-Chap2-1 监督学习概述]]></title>
       <url>/2017/12/ESLII-ch2-1/</url>
       <content type="html"><![CDATA[<p><strong>摘要</strong> ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用<code>Python</code> 实现一遍以加深理解，也能练习学习一下<code>Python</code>。这篇是ESLII第二章一些总结。</p>
 <a id="more"></a>
@@ -62,7 +62,7 @@
 <li>最小二乘算法相比最邻近算法具有低方差高偏置(low variance and high bias: stable)的特点。</li>
 </ul>
 <h1 id="统计决策理论"><a href="#统计决策理论" class="headerlink" title="统计决策理论"></a>统计决策理论</h1><p>统计决策理论(statistical decision theory)使用训练样本信息以及样本信息之外的其他信息(损失函数以及先验信息)来形成决策过程。<br>如果选择损失函数(loss function)为$L(Y,f(X))=(Y-f(X))^2$，则很自然地得到选择$f$的准则为最小化均方预测误差(expected squared predication error, EPE)：</p>
-<script type="math/tex; mode=display">\text{EPE}(f) =\int(y-f(x))^2\text{Pr}(dx,dy)</script>]]></content>
+<script type="math/tex; mode=display">\text{EPE}(f) =\int(y-f(x))^2\text{Pr}(dx,dy)=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)</script>]]></content>
       
         <categories>
             
