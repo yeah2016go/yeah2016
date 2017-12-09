@@ -62,7 +62,11 @@
 <li>最小二乘算法相比最邻近算法具有低方差高偏置(low variance and high bias: stable)的特点。</li>
 </ul>
 <h1 id="统计决策理论"><a href="#统计决策理论" class="headerlink" title="统计决策理论"></a>统计决策理论</h1><p>统计决策理论(statistical decision theory)使用训练样本信息以及样本信息之外的其他信息(损失函数以及先验信息)来形成决策过程。<br>如果选择损失函数(loss function)为$L(Y,f(X))=(Y-f(X))^2$，则很自然地得到选择$f$的准则为最小化均方预测误差(expected squared predication error, EPE)：</p>
-<script type="math/tex; mode=display">\text{EPE}(f) =\int(y-f(x))^2\text{Pr}(dx,dy)=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)</script>]]></content>
+<script type="math/tex; mode=display">\text{EPE}(f) =\int(y-f(x))^2\text{Pr}(dx,dy)=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)</script><script type="math/tex; mode=display">\begin{split}\text{EPE}(f) 
+&= \mathbf{E}(Y-f(X))^2 \\\\
+&=\int[y-f(x)]^2\text{Pr}(dx,dy)\\\\
+&=\mathbf{E}_X\mathbf{E}_{Y|X}((Y-f(X))^2|X)
+\end{split}</script>]]></content>
       
         <categories>
             
