@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是E">
+<meta name="description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，最近每天晚上有空就会读，但每次只能肯得动几页。同时，对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下">
 <meta name="keywords" content="ESLLI,最小二乘,k-最邻近,Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ESLII-Chap2-1 监督学习概述">
 <meta property="og:url" content="https://steelblue.tech/2017/12/ESLII-ch2-1/index.html">
 <meta property="og:site_name" content="朝晖的一天">
-<meta property="og:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
+<meta property="og:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，最近每天晚上有空就会读，但每次只能肯得动几页。同时，对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/example.png">
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/ls-regression.png">
 <meta property="og:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/15-knn.png">
-<meta property="og:updated_time" content="2017-12-09T16:57:44.422Z">
+<meta property="og:updated_time" content="2017-12-09T17:02:00.710Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap2-1 监督学习概述">
-<meta name="twitter:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
+<meta name="twitter:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，最近每天晚上有空就会读，但每次只能肯得动几页。同时，对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
 <meta name="twitter:image" content="https://steelblue.tech/2017/12/ESLII-ch2-1/example.png">
 
 
@@ -346,7 +346,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-10T00:57:44+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-10T01:02:00+08:00">
                 2017-12-10
               </time>
             
@@ -423,7 +423,7 @@
       
 
       
-        <p><strong>摘要</strong> ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，每天晚上有空的话就啃几页，同时对于里面的一些算法或者例子也会自己用<code>Python</code> 实现一遍以加深理解，也能练习学习一下<code>Python</code>。这篇是ESLII第二章一些总结。</p>
+        <p><strong>摘要</strong> ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，最近每天晚上有空就会读，但每次只能肯得动几页。同时，对于里面的一些算法或者例子也会自己用<code>Python</code> 实现一遍以加深理解，也能练习学习一下<code>Python</code>。这篇是ESLII第二章一些总结。</p>
 <a id="more"></a>
 <hr>
 <h1 id="基本概念、术语与标记"><a href="#基本概念、术语与标记" class="headerlink" title="基本概念、术语与标记"></a>基本概念、术语与标记</h1><p><strong>统计学习</strong>又称统计机器学习，是关于计算机基于数据构建概率统计模型并运用模型对数据进行预测与分析的一种学科。<strong>监督学习</strong>(Supervised Learning)是统计机器学习中应用最为广泛的一种，监督学习通过已有的训练样本，即已知输入以及其对应的输出，在某个评价准则下去训练得到一个最优模型，再利用这个模型将新的输入映射为相应的输出。</p>
@@ -487,9 +487,7 @@
 &=\int[y-f(x)]^2\text{Pr}(dx,dy)\\\\
 &=\mathbf{E}_X\mathbf{E}_{Y|X}([Y-f(X)]^2|X)
 \end{split}</script><p>根据上述准则的$f(x)$为:</p>
-<script type="math/tex; mode=display">\begin{split}f(x)
-&=\mathbf{E}(Y|X=x)
-\end{split}</script><p>上述方程又被称之为<strong>回归方程(regression function)</strong>，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
+<script type="math/tex; mode=display">f(x)=\mathbf{E}(Y|X=x)</script><p>上述方程又被称之为<strong>回归方程(regression function)</strong>，即当评价准则为均方误差时，$Y$在$X=x$处的最佳估计为$Y$的条件期望。</p>
 <ul>
 <li>最小二乘和最邻近算法本质上是用训练样本去估算该条件期望：<ul>
 <li>线性模型$f(x)\approx x^T\beta$的统计决策解为$\beta=[\mathbf{E}(XX^T)]^{-1}\mathbf{E}(XY)$ ；</li>
