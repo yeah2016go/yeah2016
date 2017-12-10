@@ -9,5 +9,5 @@ Disallow: /css/
 Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
-Sitemap: https://steelblue.tech/sitemap.xml
-Sitemap: https://steelblue.tech/baidusitemap.xml
+Sitemap: http://www.steelblue.tech/sitemap.xml
+Sitemap: http://www.steelblue.tech/baidusitemap.xml
