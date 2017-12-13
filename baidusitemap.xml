@@ -4,8 +4,34 @@
 
     
   <url>
+    <loc>https://www.steelblue.tech/2017/12/ESLII-ch2-1/</loc>
+    <lastmod>2017-12-13T13:56:56.817Z</lastmod>
+    <data>
+        <display>
+        <title>ESLII-Chap2 监督学习概述</title>
+        <pubTime>2017-12-08T15:11:59.000Z</pubTime>
+        
+        <tag>ESLII</tag>
+         
+        <tag>最小二乘</tag>
+         
+        <tag>k-最邻近</tag>
+         
+        <tag>Python</tag>
+         
+         
+           
+             
+              <breadCrumb title="ESLII" url="https://www.steelblue.tech/categories/ESLII/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://www.steelblue.tech/2017/12/computer-networks-ch6/</loc>
-    <lastmod>2017-12-10T09:48:57.182Z</lastmod>
+    <lastmod>2017-12-10T13:54:41.856Z</lastmod>
     <data>
         <display>
         <title>计算机网络-Chap6 传输层(思维导图)</title>
@@ -25,32 +51,6 @@
            
              
               <breadCrumb title="通信与网络" url="https://www.steelblue.tech/categories/%E9%80%9A%E4%BF%A1%E4%B8%8E%E7%BD%91%E7%BB%9C/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://www.steelblue.tech/2017/12/ESLII-ch2-1/</loc>
-    <lastmod>2017-12-09T17:25:38.460Z</lastmod>
-    <data>
-        <display>
-        <title>ESLII-Chap2-1 监督学习概述</title>
-        <pubTime>2017-12-08T15:11:59.000Z</pubTime>
-        
-        <tag>ESLLI</tag>
-         
-        <tag>最小二乘</tag>
-         
-        <tag>k-最邻近</tag>
-         
-        <tag>Python</tag>
-         
-         
-           
-             
-              <breadCrumb title="ESLII" url="https://www.steelblue.tech/categories/ESLII/"/>
           
         </display>
     </data>
