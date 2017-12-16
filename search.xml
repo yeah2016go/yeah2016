@@ -3,6 +3,90 @@
   
     
     <entry>
+      <title><![CDATA[ESLII-Chap3 线性回归方法]]></title>
+      <url>/2017/12/ESLII-ch3-1/</url>
+      <content type="html"><![CDATA[<h1 id="线性回归模型与最小二乘"><a href="#线性回归模型与最小二乘" class="headerlink" title="线性回归模型与最小二乘"></a>线性回归模型与最小二乘</h1><h2 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h2><p>使用输入向量$X^T = (X_1, X_2, …, X_p)$ 去预测实数标量$Y$，该过程的线性回归模型为：</p>
+<script type="math/tex; mode=display">Y =\beta_0+\sum_{j=0}^pX_j\beta_j</script><p>该线性回归模型假设<strong>回归方程</strong> $E(Y|X)$是(或近似)$X$的线性函数。在该模型中，$X_j$可以有很多产生方法：</p>
+<ul>
+<li>自变量中的不同分量(component)；</li>
+<li>自变量的转换，如自变量$X$的$\log$、平方根或平方等；</li>
+<li>基扩展，如$X_2 = X_1^2$，$X_3 = X_1^3$，…</li>
+<li>自变量之间的运输，如$X_3 = X_1\cdot X2$；</li>
+</ul>
+<h2 id="最小二乘算法"><a href="#最小二乘算法" class="headerlink" title="最小二乘算法"></a>最小二乘算法</h2><h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3><p>最小二乘算法是线性回归中的经典算法，该算法以最小化残差平方和(residual sum of squares)为评价准则：</p>
+<script type="math/tex; mode=display">\begin{split}\text{RSS}(\beta) 
+&= \sum_{i=1}^N(y_i-f(x_i))^2 \\\\
+&= \sum_{i=1}^N(y_i-\beta_0-\sum_{j=0}^pX_{ij}\beta_j)^2 \\\\
+&= ||\mathbf{y}-\mathbf{X}\beta||^2 \\\\
+&= (\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)
+\end{split}</script><p>为了最小化$\text{RSS}(\beta) $，求解$\text{RSS}(\beta) $对$\beta$的导数(参考文献[1])：</p>
+<script type="math/tex; mode=display">\frac{\partial \text{RSS}}{\partial\beta}= -2\mathbf{X}^T(\mathbf{y}-\mathbf{X}\beta)</script><p>假设$\mathbf{X}$列满秩(即$X$的各个分量没有相关性)，则$\mathbf{X}^T\mathbf{X}$为正定的(positive definite)，则$\mathbf{X}^T\mathbf{X}$的逆存在，顾：</p>
+<script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><blockquote>
+<p>$\mathbf{X}$列满秩 $\iff$ $\mathbf{X}^T\mathbf{X}$的逆存在 $\iff$ $\mathbf{X}$ 存在左逆$ (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $</p>
+</blockquote>
+<p>因此，对于训练数据输入，其预测的输出为：</p>
+<script type="math/tex; mode=display">\hat{\mathbf{y}} = \mathbf{X} \hat{\beta} =  \mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><blockquote>
+<p>$\mathbf{H} =  \mathbf{X}  (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $是投影到$\mathbf{X}$列空间(值域)的投影矩阵</p>
+</blockquote>
+<h3 id="线性模型的显著性检验"><a href="#线性模型的显著性检验" class="headerlink" title="线性模型的显著性检验"></a>线性模型的显著性检验</h3><p>绝大部分情况下，$Y$ 的期望是$X$的线性函数，而每次的观测到的输出变量$y_i$是服从高斯分布的随机变量，即线性回归模型可以修改为：</p>
+<script type="math/tex; mode=display">\begin{split}Y
+& = E(Y|X_1,..,X_p)+\epsilon\\\
+& = \beta_0+\sum_{j=0}^pX_j\beta_j+\epsilon
+\end{split}</script><p>其中，$\epsilon$服从$N(0,\sigma^2)$。这样容易推算得到$\hat{\beta}$的分布：</p>
+<script type="math/tex; mode=display">\hat{\beta}  \sim N(\beta, (\mathbf{X}^T\mathbf{X})^{-1}\sigma^2 ）</script><p>其中，$\sigma^2$的无偏估计为：</p>
+<script type="math/tex; mode=display">\hat{\sigma}^2 = \frac{1}{N-p-1}\sum_{i=1}^N(y_i-\hat{y}_i)^2</script><p>即$(N-p-1)\hat{\sigma}^2$服从自由度为$N-p-1$的卡方分布，$(N-p-1)\hat{\sigma}^2 \sim \sigma^2\chi^2_{N-p-1}$。同时，$\hat{\beta}$与$\hat{\sigma}^2$是统计独立的。利用上述统计特征，我们可以对某个特定的参数$\beta_j$进行显著性检验。为了验证某个特定的$\beta_j$是否为0，我们定义$z$值(Z-score)为：</p>
+<script type="math/tex; mode=display">z_j =\frac{\hat{\beta}_j}{\hat{\sigma}\sqrt{v_j}}</script><p>其中，$v_j$为$(\mathbf{X}^T\mathbf{X})^{-1}$的第$j$对角线元素。因此，$z_j$为自由度为$N-p-1$的$t$分布。当$z_j$的绝对值大于一定数值(该数值的选取通常由置信水平和自由度确定)时，就拒绝原假设$\beta_j=0$，即认为$\beta_j$对$Y$的影响是显著的。该过程也被称之为<strong>$Z$检验</strong>。</p>
+<p>$\beta_j$的$(1-2\alpha)$置信区间为：</p>
+<script type="math/tex; mode=display">(\hat{\beta}_j-z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma}, \hat{\beta}_j+z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma})</script><p>其中，$z^{(1-\alpha)}$为正态分布的第$1-\alpha$的百分位(percentile)。</p>
+<blockquote>
+<p><strong>$t$分布</strong> (参考文献[2])</p>
+<p>正态分布的两个参数$\mu$和$\sigma$决定了正态分布的位置和形态。为了应用方便，常将一般的正态变量$W$通过u变换$\frac{W-\mu}{\sigma}$转化成标准正态变量$u$，以使原来各种形态的正态分布都转换为$\mu=0$，$\sigma=1$的标准正态分布，亦称$u$分布。根据中心极限定理，通过抽样模拟试验表明，在正态分布总体中以固定$ n$ 抽取若干个样本时，样本均数的分布仍服从正态分布，即$N(\mu, \sigma)$。所以，对样本均数的分布进行u变换，也可变换为标准正态分布$N (0,1)$。</p>
+<p>由于在实际工作中，往往$\sigma$(总体方差)是未知的，常用样本方差作为$\sigma$的估计值，为了与$u$变换区别，称为$t$变换，统计量$t$值的分布称为$t$分布。假设$A$服从标准正态分布$N(0,1)$，$B$服从$\chi_n^2$分布，那么$Z=\frac{A}{\sqrt{B/n}}$的分布称为自由度为$n$的$t$分布，记为$ Z\sim t_n$。</p>
+<p>$t$分布以0为中心，左右对称的单峰分布；t分布是一簇曲线，其形态变化与n大小有关。n越小，t<br>分布曲线越低平；反之，$t$分布曲线越接近标准正态分布（$u$分布）曲线。</p>
+</blockquote>
+<p>通常我们也需要对$\beta$中的一组参数进行显著性检验，此时我们定义$F$值(F statistic)为：</p>
+<script type="math/tex; mode=display">F = \frac{(\text{RSS}_0-\text{RSS}_1)/(p_1-p_0)}{\text{RSS}_1/(N-p-1)}</script><p>其中，$\text{RSS}_1$是使用较多参数（ $p_1+1$ 个）的最小二乘拟合的残差平方和($\chi_{N-p_1-1}^2$分布)，$\text{RSS}_0$是使用较少参数（ $p_0+1$ 个）的最小二乘拟合的残差平方和($\chi_{N-p_0-1}^2$分布)，即其中$p_1-p_0$个参数被假设为0。则$F$为参数为$(p_1-p_0)$和$(N-p_1-1)$的$F$分布，即$F\sim F_{p_1-p_0, N-p_1-1}$。该过程称也之为<strong>$F$检验</strong>。</p>
+<ul>
+<li><p>当$N$趋近于无穷大时，$F_{p_1-p_0, N-p_1-1}$分布趋近于$\chi_{p_1-p_0}^2/(p_1-p_0)$；</p>
+</li>
+<li><p>$z$检验是$F$检验的特例，即$z_j = \sqrt{F}$，其中$F\sim F_{1, N-p_1-1}$。</p>
+</li>
+</ul>
+<h3 id="高斯—马尔科夫定理"><a href="#高斯—马尔科夫定理" class="headerlink" title="高斯—马尔科夫定理"></a>高斯—马尔科夫定理</h3><p><strong>高斯—马尔可夫定理（Gauss–Markov theorem）</strong>是指在给定线性回归模型$f(x_0) = x_0^T\beta$的假定下，最小二乘算法估计量$x_0^T\hat{\beta}$量具有<strong>最小方差的线性无偏估计量</strong>。 高斯-马尔可夫定理的意义在于，当线性回归模型假定成立时，我们不需要再去寻找其它无偏估计量，没有一个会优于普通最小二乘估计量。也就是说，如果存在一个好的线性无偏估计量，这个估计量的方差最多与普通最小二乘估计量的方差一样小，不会小于普通最小二乘估计量的方差。</p>
+<p>然而，存在一些有偏估计算法，例如子集选择、岭回归等，可以得到更小的均方误差MSE。这类算法通常牺牲估计偏差，来换取更多的估计方差下降。</p>
+<blockquote>
+<p><strong>均方误差</strong>（mean squares error）更能描述最终的估计精度，设$\hat{\theta}$是$\theta$的估计量，则：</p>
+<script type="math/tex; mode=display">\begin{split} \text{MSE}(\hat{\theta}) 
+& = \mathbf{E}(\hat{\theta-\theta})^2 \\\\
+& = Var(\hat{\theta})+[\mathbf{E}(\hat{\theta}-\theta)]^2 \\\\
+& = Variance + Square of Bias
+\end{split}</script><p>由此，可以看出MSE包括两部分：估计量的方差以及偏差的平方。</p>
+</blockquote>
+<p><strong>参考文献</strong></p>
+<p>[1]: <a href="https://zhuanlan.zhihu.com/p/24709748" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/24709748</a>   矩阵求导术（上）</p>
+<p>[2]: <a href="http://bbs.pinggu.org/thread-3885528-1-1.html" target="_blank" rel="noopener">http://bbs.pinggu.org/thread-3885528-1-1.html</a>    几种分布概述（正态分布/卡方分布/F分布/T分布）</p>
+]]></content>
+      
+        <categories>
+            
+            <category> ESLII </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> ESLII </tag>
+            
+            <tag> 最小二乘 </tag>
+            
+            <tag> Python </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[计算机网络-Chap6 传输层(思维导图)]]></title>
       <url>/2017/12/computer-networks-ch6/</url>
       <content type="html"><![CDATA[<p><strong>摘要</strong> 计算机网络(Computer Networks, Fifth Edition)是一本理解学习通信网络的经典之作。博主对本书的部分章节反复阅读了好多遍，几乎每一次都有新的理解。本文以思维导图的形式对该书第6章传输层进行总结，主要介绍了传输层的连接建立与释放、拥塞控制、UDP协议以及TCP协议。</p>
@@ -71,11 +155,10 @@
 <p><strong>模型</strong> (向量表示法):</p>
 <script type="math/tex; mode=display">\hat{Y} = X^T\beta</script><p>其中，$X^T = (1, X_1, X_2,…,X_p)$。</p>
 <blockquote>
-<p>在 $(p+1)$-输入输出空间中, $(X,\hat{Y})$ 代表一个<strong>超平面</strong>(hyperplane)；如果$X$中包括常量$X_0 = 1$，则该超平面包含原点，属于一个<strong>子空间</strong>；如果$X$中不包括常量$X_0 = 1$，则该超平面输入<strong>仿射集</strong>(affine set)。</p>
+<p>在 $(p+1)​$-输入输出空间中, $(X,\hat{Y})​$ 代表一个<strong>超平面</strong>(hyperplane)；如果$X​$中包括常量$X_0 = 1​$，则该超平面包含原点，属于一个<strong>子空间</strong>；如果$X​$中不包括常量$X_0 = 1​$，则该超平面输入<strong>仿射集</strong>(affine set)。</p>
 </blockquote>
 <p><strong>准则</strong>(最小残差平方和):</p>
-<p>$ \text{RSS}(\beta) = \sum_{i=1}^N(y_i-x_i^T\beta)^2$</p>
-<p>可用矩阵形似表示为：</p>
+<script type="math/tex; mode=display">\text{RSS}(\beta) = \sum_{i=1}^N(y_i-x_i^T\beta)^2</script><p>可用矩阵形似表示为：</p>
 <script type="math/tex; mode=display">\text{RSS}(\beta) = (\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)</script><p><strong>算法</strong>:</p>
 <script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><p>然后，根据该模型对第$i$对测试数据$x_i$的输出为： </p>
 <script type="math/tex; mode=display">\hat{y}_i = \hat{y}(x_i) = x_i^T\hat{\beta}</script><p>最终，$x_i$的分类结果为：如果$\hat{y}&gt;0.5$，$ \hat{G}$=<code>orange</code>，否则$ \hat{G}$ = <code>blue</code>。</p>

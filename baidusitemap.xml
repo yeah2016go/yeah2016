@@ -4,8 +4,32 @@
 
     
   <url>
+    <loc>https://www.steelblue.tech/2017/12/ESLII-ch3-1/</loc>
+    <lastmod>2017-12-16T16:49:28.712Z</lastmod>
+    <data>
+        <display>
+        <title>ESLII-Chap3 线性回归方法</title>
+        <pubTime>2017-12-12T13:20:52.000Z</pubTime>
+        
+        <tag>ESLII</tag>
+         
+        <tag>最小二乘</tag>
+         
+        <tag>Python</tag>
+         
+         
+           
+             
+              <breadCrumb title="ESLII" url="https://www.steelblue.tech/categories/ESLII/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://www.steelblue.tech/2017/12/ESLII-ch2-1/</loc>
-    <lastmod>2017-12-13T13:56:56.817Z</lastmod>
+    <lastmod>2017-12-13T16:04:04.592Z</lastmod>
     <data>
         <display>
         <title>ESLII-Chap2 监督学习概述</title>

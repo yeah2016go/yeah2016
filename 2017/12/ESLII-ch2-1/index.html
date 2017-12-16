@@ -89,7 +89,7 @@
 <meta property="og:image" content="https://www.steelblue.tech/2017/12/ESLII-ch2-1/example.png">
 <meta property="og:image" content="https://www.steelblue.tech/2017/12/ESLII-ch2-1/ls-regression.png">
 <meta property="og:image" content="https://www.steelblue.tech/2017/12/ESLII-ch2-1/15-knn.png">
-<meta property="og:updated_time" content="2017-12-13T13:56:56.817Z">
+<meta property="og:updated_time" content="2017-12-13T16:04:04.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap2 监督学习概述">
 <meta name="twitter:description" content="摘要 ESLII(The Element of Statistical Learning, Second Edition)是统计学习的经典之作。作为一枚学渣，博主读ESLII很费力，最近每天晚上有空就会读，但每次只能肯得动几页。同时，对于里面的一些算法或者例子也会自己用Python 实现一遍以加深理解，也能练习学习一下Python。这篇是ESLII第二章一些总结。">
@@ -345,8 +345,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-13T21:56:56+08:00">
-                2017-12-13
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-14T00:04:04+08:00">
+                2017-12-14
               </time>
             
           </span>
@@ -452,11 +452,10 @@
 <p><strong>模型</strong> (向量表示法):</p>
 <script type="math/tex; mode=display">\hat{Y} = X^T\beta</script><p>其中，$X^T = (1, X_1, X_2,…,X_p)$。</p>
 <blockquote>
-<p>在 $(p+1)$-输入输出空间中, $(X,\hat{Y})$ 代表一个<strong>超平面</strong>(hyperplane)；如果$X$中包括常量$X_0 = 1$，则该超平面包含原点，属于一个<strong>子空间</strong>；如果$X$中不包括常量$X_0 = 1$，则该超平面输入<strong>仿射集</strong>(affine set)。</p>
+<p>在 $(p+1)​$-输入输出空间中, $(X,\hat{Y})​$ 代表一个<strong>超平面</strong>(hyperplane)；如果$X​$中包括常量$X_0 = 1​$，则该超平面包含原点，属于一个<strong>子空间</strong>；如果$X​$中不包括常量$X_0 = 1​$，则该超平面输入<strong>仿射集</strong>(affine set)。</p>
 </blockquote>
 <p><strong>准则</strong>(最小残差平方和):</p>
-<p>$ \text{RSS}(\beta) = \sum_{i=1}^N(y_i-x_i^T\beta)^2$</p>
-<p>可用矩阵形似表示为：</p>
+<script type="math/tex; mode=display">\text{RSS}(\beta) = \sum_{i=1}^N(y_i-x_i^T\beta)^2</script><p>可用矩阵形似表示为：</p>
 <script type="math/tex; mode=display">\text{RSS}(\beta) = (\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)</script><p><strong>算法</strong>:</p>
 <script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><p>然后，根据该模型对第$i$对测试数据$x_i$的输出为： </p>
 <script type="math/tex; mode=display">\hat{y}_i = \hat{y}(x_i) = x_i^T\hat{\beta}</script><p>最终，$x_i$的分类结果为：如果$\hat{y}&gt;0.5$，$ \hat{G}$=<code>orange</code>，否则$ \hat{G}$ = <code>blue</code>。</p>
@@ -670,7 +669,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
