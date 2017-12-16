@@ -325,8 +325,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-12T21:20:52+08:00">
-                2017-12-12
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-17T21:20:52+08:00">
+                2017-12-17
               </time>
             
 
@@ -437,12 +437,12 @@
 &= (\mathbf{y}-\mathbf{X}\beta)^T(\mathbf{y}-\mathbf{X}\beta)
 \end{split}</script><p>为了最小化$\text{RSS}(\beta) $，求解$\text{RSS}(\beta) $对$\beta$的导数(参考文献[1])：</p>
 <script type="math/tex; mode=display">\frac{\partial \text{RSS}}{\partial\beta}= -2\mathbf{X}^T(\mathbf{y}-\mathbf{X}\beta)</script><p>假设$\mathbf{X}$列满秩(即$X$的各个分量没有相关性)，则$\mathbf{X}^T\mathbf{X}$为正定的(positive definite)，则$\mathbf{X}^T\mathbf{X}$的逆存在，顾：</p>
-<script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><blockquote>
-<p>$\mathbf{X}$列满秩 $\iff$ $\mathbf{X}^T\mathbf{X}$的逆存在 $\iff$ $\mathbf{X}$ 存在左逆$ (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $</p>
-</blockquote>
-<p>因此，对于训练数据输入，其预测的输出为：</p>
+<script type="math/tex; mode=display">\hat{\beta} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><p>因此，对于训练数据输入，其预测的输出为：</p>
 <script type="math/tex; mode=display">\hat{\mathbf{y}} = \mathbf{X} \hat{\beta} =  \mathbf{X}(\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}</script><blockquote>
-<p>$\mathbf{H} =  \mathbf{X}  (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $是投影到$\mathbf{X}$列空间(值域)的投影矩阵</p>
+<ul>
+<li>$\mathbf{X}$列满秩 $\iff$ $\mathbf{X}^T\mathbf{X}$的逆存在 $\iff$ $\mathbf{X}$ 存在左逆$ (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $</li>
+<li>$\mathbf{H} =  \mathbf{X}  (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T $是投影到$\mathbf{X}$列空间(值域)的投影矩阵</li>
+</ul>
 </blockquote>
 <h2 id="线性回归模型的显著性检验"><a href="#线性回归模型的显著性检验" class="headerlink" title="线性回归模型的显著性检验"></a>线性回归模型的显著性检验</h2><p>绝大部分情况下，$Y$ 的期望是$X$的线性函数，而每次的观测到的输出变量$y_i$是服从高斯分布的随机变量，即线性回归模型可以修改为：</p>
 <script type="math/tex; mode=display">\begin{split}Y
@@ -476,7 +476,7 @@
 & = \mathbf{E}(\hat{\theta-\theta})^2 \\\\
 & = Var(\hat{\theta})+[\mathbf{E}(\hat{\theta}-\theta)]^2 \\\\
 & = Variance + Square of Bias
-\end{split}</script><p>由此，可以看出MSE包括两部分：估计量的方差以及偏差的平方。</p>
+\end{split}</script><p>由此可以看出MSE包括两部分：估计量的方差以及偏差的平方。</p>
 </blockquote>
 <p><strong>参考文献</strong></p>
 <p>[1]: <a href="https://zhuanlan.zhihu.com/p/24709748" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/24709748</a>   矩阵求导术（上）</p>
