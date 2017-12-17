@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[ESLII-Chap3 线性回归方法]]></title>
       <url>/2017/12/ESLII-ch3-1/</url>
-      <content type="html"><![CDATA[<p><strong>摘要</strong> 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)模型、高斯-马尔科夫定理等内容。</p>
+      <content type="html"><![CDATA[<p><strong>摘要</strong> 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理等内容。</p>
 <a id="more"></a>
 <hr>
 <h1 id="线性回归模型与最小二乘"><a href="#线性回归模型与最小二乘" class="headerlink" title="线性回归模型与最小二乘"></a>线性回归模型与最小二乘</h1><h2 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h2><p>使用输入向量$X^T = (X_1, X_2, …, X_p)$ 去预测实数标量$Y$，该过程的线性回归模型为：</p>
@@ -60,9 +60,9 @@
 <blockquote>
 <p><strong>均方误差</strong>（mean squares error）更能描述最终的估计精度，设$\hat{\theta}$是$\theta$的估计量，则：</p>
 <script type="math/tex; mode=display">\begin{split} \text{MSE}(\hat{\theta}) 
-& = \mathbf{E}(\hat{\theta-\theta})^2 \\\\
+& = \mathbf{E}(\hat{\theta}-\theta)^2 \\\\
 & = Var(\hat{\theta})+[\mathbf{E}(\hat{\theta}-\theta)]^2 \\\\
-& = Variance + Square of Bias
+& = \text{Variance} + \text{Square of Bias}
 \end{split}</script><p>由此可以看出MSE包括两部分：估计量的方差以及偏差的平方。</p>
 </blockquote>
 <p><strong>参考文献</strong></p>
