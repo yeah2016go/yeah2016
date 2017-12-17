@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="朝晖的一天">
 <meta property="og:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-17T16:10:59.072Z">
+<meta property="og:updated_time" content="2017-12-17T17:40:52.453Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap3 线性回归方法">
 <meta name="twitter:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
@@ -341,7 +341,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-18T00:10:59+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-18T01:40:52+08:00">
                 2017-12-18
               </time>
             
@@ -484,10 +484,7 @@
 </li>
 <li><p>$\text{For }  j = 1, 2, …, p$</p>
 <p>  计算$\mathbf{x}_j$在$\mathbf{z}_0, \mathbf{z}_1, …, \mathbf{z_{j-1}} $上的回归系数$\hat{\gamma}_{lj}$和残余向量$\mathbf{z}_j$</p>
-<script type="math/tex; mode=display">\hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>}</script></li>
-</ol>
-<p>​        <script type="math/tex">\mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k</script></p>
-<ol>
+<script type="math/tex; mode=display">\hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>}​</script><script type="math/tex; mode=display">\mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k</script></li>
 <li><p>计算$\mathbf{y}$在残差$\mathbf{z}_j$上的回归系数，即得到待估计的$\hat{\beta}_p$</p>
 <script type="math/tex; mode=display">\hat{\beta}_p=\frac{<\mathbf{z}_p, \mathbf{y}>}{<\mathbf{z}_p, \mathbf{z}_p>}</script></li>
 </ol>
@@ -502,7 +499,7 @@
 <script type="math/tex; mode=display">\mathbf{X}=\mathbf{Z}\mathbf{D}^{-1}\mathbf{D}\mathbf{\Gamma}=\mathbf{Q}\mathbf{R}</script><p>上式为矩阵的QR分解，其中$\mathbf{Q}^T\mathbf{Q} = \mathbf{I}$。所以可以求得多元线性回归模型的系数为：</p>
 <script type="math/tex; mode=display">\begin{eqnarray}
 \hat{\beta}&=&\mathbf{R}^{-1}\mathbf{Q}^T\mathbf{y}\\\\
-\hat{\mathbf{y} & = & \mathbf{Q}\mathbf{Q}^T\mathbf{y}
+\hat{\mathbf{y}} & = & \mathbf{Q}\mathbf{Q}^T\mathbf{y}
 \end{eqnarray}</script><p><strong>参考文献</strong></p>
 <p>[1]: <a href="https://zhuanlan.zhihu.com/p/24709748" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/24709748</a>   矩阵求导术（上）<br>[2]: <a href="http://bbs.pinggu.org/thread-3885528-1-1.html" target="_blank" rel="noopener">http://bbs.pinggu.org/thread-3885528-1-1.html</a>    几种分布概述（正态分布/卡方分布/F分布/T分布）</p>
 
