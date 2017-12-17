@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title><![CDATA[ESLII-Chap3 线性回归方法]]></title>
+      <title><![CDATA[ESLII-Chap3 线性回归方法（1）]]></title>
       <url>/2017/12/ESLII-ch3-1/</url>
       <content type="html"><![CDATA[<p><strong>摘要</strong> 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。</p>
 <a id="more"></a>
@@ -71,7 +71,10 @@
 </li>
 <li><p>$\text{For }  j = 1, 2, …, p$</p>
 <p>  计算$\mathbf{x}_j$在$\mathbf{z}_0, \mathbf{z}_1, …, \mathbf{z_{j-1}} $上的回归系数$\hat{\gamma}_{lj}$和残余向量$\mathbf{z}_j$</p>
-<script type="math/tex; mode=display">\hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>}​</script><script type="math/tex; mode=display">\mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k</script></li>
+<script type="math/tex; mode=display">\begin{eqnarray}
+  \hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>} \\\\
+  \mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k
+  \end{eqnarray}</script></li>
 <li><p>计算$\mathbf{y}$在残差$\mathbf{z}_j$上的回归系数，即得到待估计的$\hat{\beta}_p$</p>
 <script type="math/tex; mode=display">\hat{\beta}_p=\frac{<\mathbf{z}_p, \mathbf{y}>}{<\mathbf{z}_p, \mathbf{z}_p>}</script></li>
 </ol>

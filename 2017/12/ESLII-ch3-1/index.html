@@ -81,14 +81,14 @@
 <meta name="description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
 <meta name="keywords" content="ESLII,最小二乘,Python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ESLII-Chap3 线性回归方法">
+<meta property="og:title" content="ESLII-Chap3 线性回归方法（1）">
 <meta property="og:url" content="https://www.steelblue.tech/2017/12/ESLII-ch3-1/index.html">
 <meta property="og:site_name" content="朝晖的一天">
 <meta property="og:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-17T17:40:52.453Z">
+<meta property="og:updated_time" content="2017-12-17T17:43:08.311Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ESLII-Chap3 线性回归方法">
+<meta name="twitter:title" content="ESLII-Chap3 线性回归方法（1）">
 <meta name="twitter:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>ESLII-Chap3 线性回归方法 | 朝晖的一天</title>
+  <title>ESLII-Chap3 线性回归方法（1） | 朝晖的一天</title>
   
 
 
@@ -313,7 +313,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ESLII-Chap3 线性回归方法</h1>
+          <h1 class="post-title" itemprop="name headline">ESLII-Chap3 线性回归方法（1）</h1>
         
 
         <div class="post-meta">
@@ -341,7 +341,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-18T01:40:52+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-18T01:43:08+08:00">
                 2017-12-18
               </time>
             
@@ -387,7 +387,7 @@
 
           
           
-             <span id="/2017/12/ESLII-ch3-1/" class="leancloud_visitors" data-flag-title="ESLII-Chap3 线性回归方法">
+             <span id="/2017/12/ESLII-ch3-1/" class="leancloud_visitors" data-flag-title="ESLII-Chap3 线性回归方法（1）">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -484,7 +484,10 @@
 </li>
 <li><p>$\text{For }  j = 1, 2, …, p$</p>
 <p>  计算$\mathbf{x}_j$在$\mathbf{z}_0, \mathbf{z}_1, …, \mathbf{z_{j-1}} $上的回归系数$\hat{\gamma}_{lj}$和残余向量$\mathbf{z}_j$</p>
-<script type="math/tex; mode=display">\hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>}​</script><script type="math/tex; mode=display">\mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k</script></li>
+<script type="math/tex; mode=display">\begin{eqnarray}
+  \hat{\gamma}_{lj}=\frac{<\mathbf{z}_l, \mathbf{x}_j>}{<\mathbf{z}_l, \mathbf{z}_l>} \\\\
+  \mathbf{z}_j = \mathbf{x}_j - \sum_{k=0}^{j-1} \hat{\gamma}_{kj}\mathbf{z}_k
+  \end{eqnarray}</script></li>
 <li><p>计算$\mathbf{y}$在残差$\mathbf{z}_j$上的回归系数，即得到待估计的$\hat{\beta}_p$</p>
 <script type="math/tex; mode=display">\hat{\beta}_p=\frac{<\mathbf{z}_p, \mathbf{y}>}{<\mathbf{z}_p, \mathbf{z}_p>}</script></li>
 </ol>
@@ -522,7 +525,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.steelblue.tech/2017/12/ESLII-ch3-1/" title="ESLII-Chap3 线性回归方法">https://www.steelblue.tech/2017/12/ESLII-ch3-1/</a>
+    <a href="https://www.steelblue.tech/2017/12/ESLII-ch3-1/" title="ESLII-Chap3 线性回归方法（1）">https://www.steelblue.tech/2017/12/ESLII-ch3-1/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
