@@ -4,8 +4,36 @@
 
     
   <url>
+    <loc>https://www.steelblue.tech/2017/12/ESLII-ch3-2/</loc>
+    <lastmod>2017-12-24T01:34:52.665Z</lastmod>
+    <data>
+        <display>
+        <title>ESLII-Chap3 线性回归方法（2）</title>
+        <pubTime>2017-12-23T14:16:56.000Z</pubTime>
+        
+        <tag>ESLII</tag>
+         
+        <tag>最小二乘</tag>
+         
+        <tag>子集选择</tag>
+         
+        <tag>逐步回归</tag>
+         
+        <tag>分段回归</tag>
+         
+         
+           
+             
+              <breadCrumb title="ESLII" url="https://www.steelblue.tech/categories/ESLII/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://www.steelblue.tech/2017/12/ESLII-ch3-1/</loc>
-    <lastmod>2017-12-17T17:43:08.311Z</lastmod>
+    <lastmod>2017-12-23T05:36:30.087Z</lastmod>
     <data>
         <display>
         <title>ESLII-Chap3 线性回归方法（1）</title>

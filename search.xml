@@ -3,9 +3,75 @@
   
     
     <entry>
+      <title><![CDATA[ESLII-Chap3 线性回归方法（2）]]></title>
+      <url>/2017/12/ESLII-ch3-2/</url>
+      <content type="html"><![CDATA[<p><strong>摘要</strong>：本文为ESLII(The Element of Statistical Learning, Second Edition)第三章的学习总结。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。</p>
+<a id="more"></a>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由于以下两个原因，经典的最小二乘算法(Ordinary Least Square, OLS)通常无法满足实际的应用需求：</p>
+<ul>
+<li><strong>预测精度</strong> (predication accuracy)：虽然在线性回归模型中，最小二乘算法是无偏估计算法中预测方差最小的一类算法，但当自变量$X$的分量(predictor, 预测变量)个数$p$较多且一些分量$X_j$对因变量$Y$没有贡献或者贡献较小时，最小二乘算法的估计方差仍然较大，无法满足预测精度需求。此时，通过对这些不重要的系数$\beta_j$进行收缩或者置零，牺牲一点估计偏差，可以换取更小的估计方差，获得更佳的估计精度。</li>
+<li><strong>解释能力</strong>(interpretation)：当自变量$X$的分量个数$p$较多，我们通常希望找出对大局影响最多的自变量子集，忽略一些贡献较小的自变量分量。</li>
+</ul>
+<p>因此，出于以上原因，我们会进行<strong>子集选择</strong>(subset selection)。子集选择属于<strong>模型选择</strong>(model selection)的范畴。<em>注：有些文献资料中称子集选择为变量选择(variable selection)或特征选择(feature selection)，在本文中，我们将沿用<code>ESLII</code>中的表示习惯。</em></p>
+<h1 id="最优子集选择"><a href="#最优子集选择" class="headerlink" title="最优子集选择"></a>最优子集选择</h1><p><strong>最优子集选择</strong>(best-subset selection)是以最小化残差平方和为目标使用遍历的方法计算每种子集大小下的子集选择$\mathcal{M}_k$，其中$k$为子集大小。然而，在训练数据一定的情况下，$k$越大，$\mathcal{M}_k$作用在该训练数据的残差平方和必然也是越小的，所以通常我们选用<strong>交叉验证</strong>或者<strong>AIC</strong>(Akaike Information Criterion,  赤池信息准则)或者<strong>BIC</strong>(Bayesian Information Criterion, 贝叶斯信息准则) 来选择一个最佳的$k$值，进而获得最佳的子集选择$\mathcal{M}_k$。</p>
+<ul>
+<li>子集选择是在模型复杂度与模型对数据集描述能力（例如似然函数）之间寻求最佳平衡，即<strong>经验风险</strong>与<strong>结构风险</strong>的权衡。AIC、BIC以及其他的信息准则均是通过加入模型复杂度的惩罚项来避免过拟合问题(详见参考文献[1])，本质上属于<strong>正则化</strong>的范畴。</li>
+<li>最有子集算法适用于$p&lt;40$的线性回归场景，此时通过使用<strong>leaps and bounds procedure</strong>来提高最优子集选择的运算效率。</li>
+</ul>
+<h1 id="前向-后向逐步选择"><a href="#前向-后向逐步选择" class="headerlink" title="前向/后向逐步选择"></a>前向/后向逐步选择</h1><p>当$p$很大时最优子集选择的运算效率很低，所以我们通过路径搜索的方法来实现子集选择。<strong>前向逐步选择</strong>(forward stepwise selection)初始状态不包含任何预测变量开始(仅含有截距$\bar{y}$)，然后依次往模型中添加预测变量，且每次添加的预测变量能够最大限度地提升模型的预测效果(最小化)的变量加入模型中。</p>
+<ul>
+<li>前向逐步选择算法每一步产生了子集大小为$k$的子集选择$\mathcal{M}_k$。和最优子集选择类似，而需要先确定$k$值，才能得到最终的子集选择结果。</li>
+<li>前向逐步选择算法属于贪婪算法，无法得到最优解。但该算法仍然会比最优子集算法受欢迎，因为：<ul>
+<li>运算量(computational)：运算简单，总是可以高效地得到一系列的子集选择结果$\mathcal{M}_k$，即便$p\gg N$。</li>
+<li>统计意义(statistical)：相比最优子集选择，前向逐步选择算法的搜索过程具有更加严格的约束条件，所以前向逐步选择算法会有更低的估计方差，但其估计偏差可能也会增大。</li>
+</ul>
+</li>
+<li>前向选择算法在每一步的搜索过程中，需要遍历所有剩余的预测变量，然后依次重新进行最小二乘计算，并选择预测精度最佳的预测变量添加到预测变量子集中。</li>
+</ul>
+<p><strong>后向逐步选择</strong>(backward stepwise selection)是从包含所有的预测变量开始，然后通过$z$检验的方式，每一步丢弃一个$z$值最小的预测变量，然后重新应用最小二乘算法计算模型系数。后向逐步选择算法是前向逐步算法的逆过程，性能也极其接近，但后向逐步选择算法无法应用于$p&gt;N$的场景。</p>
+<p><strong>混合逐步选择</strong>(hybrid stepwise selection)综合了前向/后向两种逐步选择算法的思想。在每一步的搜索过程中，会分别进行前向(添加最大提升模型性能的预测变量)和后向(丢弃对模型性能影响最小的预测变量)的搜索，然后同过某些准则(AIC，BIC等)来决定该步是选择前向还是后向。</p>
+<h1 id="前向分段回归"><a href="#前向分段回归" class="headerlink" title="前向分段回归"></a>前向分段回归</h1><p><strong>前向分段回归</strong>(forward stagewise regression, FS)比前向逐步回归更加严格。前向分段算法的流程如下：</p>
+<ul>
+<li>初始状态，同样仅包含截距而其他的系数均为0；</li>
+<li>在每一次的搜索步骤中，选择与残差相关性最高的预测变量$X_j$；</li>
+<li>计算残差在该预测变量上的回归系数$\beta_j^{(n)}$(其他预测变量对应的系数不变)，并将该回归系数累加回之前的$\beta_j^{(n-1)}$ ；</li>
+<li>更新残差，并跳转到步骤2，进行下一次的搜索步骤，直到残差与任何预测变量均无相关性。</li>
+</ul>
+<p>可以看出，分段回归在每个步骤中仅仅更新了特定的一个回归系数，而不是像逐步回归算法那样重新进行所有回归系数的最小二乘计算。因此，相比前向逐步回归，该算法拟合速度慢，尤其是在高纬度的回归问题中。慢速拟合实际上是指搜索过程的每一步迈的步子都很小，避免了前向逐步回归的贪婪，在维度下可以获得更佳的性能。</p>
+<h1 id="几种子集选择算法的比较"><a href="#几种子集选择算法的比较" class="headerlink" title="几种子集选择算法的比较"></a>几种子集选择算法的比较</h1><p><code>ESLII Figure3.6</code>对比了上述几种子集选择的估计精度以及收敛速度。这里，我们通过<code>Python</code>来还原<code>ESLII Figure3.6</code>。</p>
+<p>“未完待续，代码调试ok后马上更新”</p>
+<p><strong>参考文献</strong></p>
+<p>[1]: <a href="http://blog.csdn.net/jteng/article/details/40823675" target="_blank" rel="noopener">http://blog.csdn.net/jteng/article/details/40823675</a>   模型选择之AIC与BIC</p>
+]]></content>
+      
+        <categories>
+            
+            <category> ESLII </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> ESLII </tag>
+            
+            <tag> 最小二乘 </tag>
+            
+            <tag> 子集选择 </tag>
+            
+            <tag> 逐步回归 </tag>
+            
+            <tag> 分段回归 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[ESLII-Chap3 线性回归方法（1）]]></title>
       <url>/2017/12/ESLII-ch3-1/</url>
-      <content type="html"><![CDATA[<p><strong>摘要</strong> 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。</p>
+      <content type="html"><![CDATA[<p><strong>摘要</strong> 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。</p>
 <a id="more"></a>
 <hr>
 <h1 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h1><p>使用输入向量$X^T = (X_1, X_2, …, X_p)$ 去预测实数标量$Y$，该过程的线性回归模型为：</p>
@@ -43,7 +109,7 @@
 <script type="math/tex; mode=display">(\hat{\beta}_j-z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma}, \hat{\beta}_j+z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma})</script><p>其中，$z^{(1-\alpha)}$为正态分布的第$1-\alpha$的百分位(percentile)。</p>
 <blockquote>
 <p><strong>$t$分布</strong> (参考文献[2])</p>
-<p>正态分布的两个参数$\mu$和$\sigma$决定了正态分布的位置和形态。为了应用方便，常将一般的正态变量$W$通过u变换$\frac{W-\mu}{\sigma}$转化成标准正态变量$u$，以使原来各种形态的正态分布都转换为$\mu=0$，$\sigma=1$的标准正态分布，亦称$u$分布。根据中心极限定理，通过抽样模拟试验表明，在正态分布总体中以固定$ n$ 抽取若干个样本时，样本均数的分布仍服从正态分布，即$N(\mu, \sigma)$。所以，对样本均数的分布进行$u$变换，也可变换为标准正态分布$N (0,1)$。</p>
+<p>正态分布的两个参数$\mu$和$\sigma$决定了正态分布的位置和形态。为了应用方便，常将一般的正态变量$W$通过u变换$\frac{W-\mu}{\sigma}$转化成标准正态变量$u$，以使原来各种形态的正态分布都转换为$\mu=0$，$\sigma=1$的标准正态分布，亦称$u$分布。根据中心极限定理，通过抽样模拟试验表明，在正态分布总体中以固定$ n$ 抽取若干个样本时，样本均数的分布仍服从正态分布，即$N(\mu, \sigma^2)$。所以，对样均数的分布进行$u$变换，也可变换为标准正态分布$N (0,1)$。</p>
 <p>由于在实际工作中，往往$\sigma$(总体方差)是未知的，常用样本方差作为$\sigma$的估计值，为了与$u$变换区别，称为$t$变换，统计量$t$值的分布称为$t$分布。假设$A$服从标准正态分布$N(0,1)$，$B$服从$\chi_n^2$分布，那么$Z=\frac{A}{\sqrt{B/n}}$的分布称为自由度为$n$的$t$分布，记为$ Z\sim t_n$。</p>
 <p>$t$分布以0为中心，左右对称的单峰分布；t分布是一簇曲线，其形态变化与n大小有关。n越小，t<br>分布曲线越低平；反之，$t$分布曲线越接近标准正态分布（$u$分布）曲线。</p>
 </blockquote>

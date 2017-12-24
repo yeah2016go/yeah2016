@@ -78,18 +78,18 @@
 
 
 
-<meta name="description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
+<meta name="description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$">
 <meta name="keywords" content="ESLII,最小二乘,Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ESLII-Chap3 线性回归方法（1）">
 <meta property="og:url" content="https://www.steelblue.tech/2017/12/ESLII-ch3-1/index.html">
 <meta property="og:site_name" content="朝晖的一天">
-<meta property="og:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
+<meta property="og:description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-17T17:43:08.311Z">
+<meta property="og:updated_time" content="2017-12-23T05:36:30.087Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap3 线性回归方法（1）">
-<meta name="twitter:description" content="摘要 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。">
+<meta name="twitter:description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系">
 
 
 
@@ -341,8 +341,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-18T01:43:08+08:00">
-                2017-12-18
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-23T13:36:30+08:00">
+                2017-12-23
               </time>
             
           </span>
@@ -418,7 +418,7 @@
       
 
       
-        <p><strong>摘要</strong> 本文为ESLII第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。</p>
+        <p><strong>摘要</strong> 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结。线性回归方法假设回归方程 $\mathbf{E}(Y|X)$是输入变量的线性组合，该方法使用最为广泛。本文介绍了最小二乘的算法、显著性检验方法($z$检验和$F$检验)、高斯-马尔科夫定理、利用Gram-Schmidt正交化求解多元回归模型系数等内容。</p>
 <a id="more"></a>
 <hr>
 <h1 id="线性回归模型"><a href="#线性回归模型" class="headerlink" title="线性回归模型"></a>线性回归模型</h1><p>使用输入向量$X^T = (X_1, X_2, …, X_p)$ 去预测实数标量$Y$，该过程的线性回归模型为：</p>
@@ -456,7 +456,7 @@
 <script type="math/tex; mode=display">(\hat{\beta}_j-z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma}, \hat{\beta}_j+z^{(1-\alpha)}v_j^{\frac{1}{2}}\hat{\sigma})</script><p>其中，$z^{(1-\alpha)}$为正态分布的第$1-\alpha$的百分位(percentile)。</p>
 <blockquote>
 <p><strong>$t$分布</strong> (参考文献[2])</p>
-<p>正态分布的两个参数$\mu$和$\sigma$决定了正态分布的位置和形态。为了应用方便，常将一般的正态变量$W$通过u变换$\frac{W-\mu}{\sigma}$转化成标准正态变量$u$，以使原来各种形态的正态分布都转换为$\mu=0$，$\sigma=1$的标准正态分布，亦称$u$分布。根据中心极限定理，通过抽样模拟试验表明，在正态分布总体中以固定$ n$ 抽取若干个样本时，样本均数的分布仍服从正态分布，即$N(\mu, \sigma)$。所以，对样本均数的分布进行$u$变换，也可变换为标准正态分布$N (0,1)$。</p>
+<p>正态分布的两个参数$\mu$和$\sigma$决定了正态分布的位置和形态。为了应用方便，常将一般的正态变量$W$通过u变换$\frac{W-\mu}{\sigma}$转化成标准正态变量$u$，以使原来各种形态的正态分布都转换为$\mu=0$，$\sigma=1$的标准正态分布，亦称$u$分布。根据中心极限定理，通过抽样模拟试验表明，在正态分布总体中以固定$ n$ 抽取若干个样本时，样本均数的分布仍服从正态分布，即$N(\mu, \sigma^2)$。所以，对样均数的分布进行$u$变换，也可变换为标准正态分布$N (0,1)$。</p>
 <p>由于在实际工作中，往往$\sigma$(总体方差)是未知的，常用样本方差作为$\sigma$的估计值，为了与$u$变换区别，称为$t$变换，统计量$t$值的分布称为$t$分布。假设$A$服从标准正态分布$N(0,1)$，$B$服从$\chi_n^2$分布，那么$Z=\frac{A}{\sqrt{B/n}}$的分布称为自由度为$n$的$t$分布，记为$ Z\sim t_n$。</p>
 <p>$t$分布以0为中心，左右对称的单峰分布；t分布是一簇曲线，其形态变化与n大小有关。n越小，t<br>分布曲线越低平；反之，$t$分布曲线越接近标准正态分布（$u$分布）曲线。</p>
 </blockquote>
@@ -582,6 +582,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/12/ESLII-ch3-2/" rel="prev" title="ESLII-Chap3 线性回归方法（2）">
+                ESLII-Chap3 线性回归方法（2） <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -666,7 +670,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">10</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -688,7 +692,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
