@@ -78,18 +78,18 @@
 
 
 
-<meta name="description" content="摘要：本文为ESLII(The Element of Statistical Learning, Second Edition)第三章的学习总结。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择">
+<meta name="description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结(2)。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优">
 <meta name="keywords" content="ESLII,最小二乘,子集选择,逐步回归,分段回归">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ESLII-Chap3 线性回归方法（2）">
 <meta property="og:url" content="https://www.steelblue.tech/2017/12/ESLII-ch3-2/index.html">
 <meta property="og:site_name" content="朝晖的一天">
-<meta property="og:description" content="摘要：本文为ESLII(The Element of Statistical Learning, Second Edition)第三章的学习总结。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。">
+<meta property="og:description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结(2)。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-24T01:34:52.665Z">
+<meta property="og:updated_time" content="2017-12-24T11:53:09.331Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ESLII-Chap3 线性回归方法（2）">
-<meta name="twitter:description" content="摘要：本文为ESLII(The Element of Statistical Learning, Second Edition)第三章的学习总结。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。">
+<meta name="twitter:description" content="摘要 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结(2)。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。">
 
 
 
@@ -341,7 +341,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-24T09:34:52+08:00">
+              <time title="更新于" itemprop="dateModified" datetime="2017-12-24T19:53:09+08:00">
                 2017-12-24
               </time>
             
@@ -418,7 +418,7 @@
       
 
       
-        <p><strong>摘要</strong>：本文为ESLII(The Element of Statistical Learning, Second Edition)第三章的学习总结。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。</p>
+        <p><strong>摘要</strong> 本文为ESLII(The Element of Statistical Learning, Second Edition)第三章线性回归方法的学习总结(2)。子集选择(又称之为变量选择/特征选择)是线性回归过程中非常重要的概念，应用也十分广泛。子集选择的准则以及方法非常多，本文主要介绍了ESLII第三章提到的最优子集选择、逐步选择、分段选择等算法，并通过Python对这些算法进行了分析比较。</p>
 <a id="more"></a>
 <hr>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>由于以下两个原因，经典的最小二乘算法(Ordinary Least Square, OLS)通常无法满足实际的应用需求：</p>
