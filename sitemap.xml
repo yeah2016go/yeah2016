@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://www.steelblue.tech/about/index.html</loc>
+    
+    <lastmod>2017-12-25T15:19:35.478Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://www.steelblue.tech/2017/12/ESLII-ch3-2/</loc>
     
     <lastmod>2017-12-24T11:53:09.331Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>https://www.steelblue.tech/categories/index.html</loc>
     
     <lastmod>2017-12-16T17:16:03.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://www.steelblue.tech/about/index.html</loc>
-    
-    <lastmod>2017-12-16T17:15:53.094Z</lastmod>
     
   </url>
   
